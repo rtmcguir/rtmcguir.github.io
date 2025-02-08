@@ -29,10 +29,18 @@
             margin: 1em 0;
         }
         .image-container {
-            width: 100%;
-            margin: 2em 0;
-            text-align: center;
-        }
+    display: flex;
+    justify-content: center; /* Centers image horizontally */
+    align-items: center; /* Centers image vertically (if container has height) */
+    width: 100%; /* Ensures container spans the full width */
+    margin: 2em 0; /* Keeps the same spacing */
+}
+.image-container img {
+    display: block;
+    margin: auto; /* Ensures centering even if Flexbox isn't applied */
+    max-width: 100%; /* Makes the image responsive */
+    height: auto; /* Keeps aspect ratio */
+}
         h2 {
             text-align: center;
             margin: 2em 0 1em;
