@@ -4,91 +4,212 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taylor & Ryan's Wedding</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.8;
-            background-color: #faebd7; /* Antique White background */
-            font-size: 18px; /* Slightly larger font */
+        :root {
+            --primary-color: #8B7355;
+            --secondary-color: #D2B48C;
+            --accent-color: #4A4A4A;
+            --background-color: #FAF9F6;
+            --text-color: #333;
         }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            line-height: 1.8;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
         .header {
             text-align: center;
-            margin: 2em 0;
+            padding: 4rem 0;
+            background-color: var(--secondary-color);
+            color: white;
+            margin-bottom: 3rem;
         }
+
         .date {
-            text-align: center;
-            font-weight: bold;
-            margin: 2em 0;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin: 1rem 0;
         }
+
         .names {
-            text-align: center;
-            font-size: 26px;
-            margin: 1em 0;
+            font-size: 3rem;
+            font-weight: 400;
+            margin: 1.5rem 0;
+            letter-spacing: 4px;
         }
+
         .welcome {
             text-align: center;
-            margin: 1em 0;
+            margin: 2rem 0;
+            font-size: 1.2rem;
+            line-height: 2;
         }
+
         .image-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            margin: 2em 0;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .image-container img {
-            display: block;
-            margin: auto;
-            max-width: 100%;
+            width: 100%;
             height: auto;
+            display: block;
+            transition: transform 0.3s ease;
         }
+
+        .image-container:hover img {
+            transform: scale(1.02);
+        }
+
         h2 {
             text-align: center;
-            margin: 2em 0 1em;
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin: 3rem 0 2rem;
+            position: relative;
+            padding-bottom: 1rem;
         }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
         .letter {
-            margin: 2em 0;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin: 2rem 0;
         }
+
+        .letter p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
         .signature {
-            margin: 2em 0;
+            margin: 3rem 0;
             text-align: center;
             font-style: italic;
+            color: var(--primary-color);
         }
+
         .footer {
             text-align: center;
-            margin: 2em 0;
+            padding: 3rem 0;
+            background-color: var(--secondary-color);
+            color: white;
+            margin-top: 3rem;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--secondary-color);
+        }
+
+        .divider i {
+            padding: 0 1rem;
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .names {
+                font-size: 2.5rem;
+            }
+
+            .letter {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animation for content fade-in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
         }
     </style>
 </head>
 <body>
-    <div class="image-container">
-        <img src="https://i.imgur.com/mBBAI8G.jpg" alt="Wedding flowers" loading="lazy"/>
+    <div class="header animate-fade-in">
+        <div class="container">
+            <div class="date">March 8th, 2025</div>
+            <div class="names">Taylor & Ryan</div>
+            <div class="welcome">
+                <p>Welcome to our wedding!</p>
+                <p>Please find your seats.</p>
+            </div>
+        </div>
     </div>
 
-    <div class="date">March 8th, 2025</div>
+    <div class="container">
+        <div class="image-container animate-fade-in">
+            <img src="https://i.imgur.com/nxOSZSx.jpg" alt="Couple on brick path"/>
+        </div>
 
-    <div class="names">Taylor & Ryan</div>
+        <div class="divider">
+            <i class="fas fa-heart"></i>
+        </div>
 
-    <div class="welcome">
-        <p>Welcome you to their wedding!</p>
-        <p>Please, find your seats.</p>
-        <p>The couple cannot wait to see their loved ones during the ceremony.<br>
-        Please find your assigned seat.</p>
-    </div>
-
-    <div class="image-container">
-        <img src="https://i.imgur.com/nxOSZSx.jpg" alt="Couple on brick path" loading="lazy"/>
-    </div>
-
-    <div class="header">We are gathered here today...</div>
-
-    <h2>Why Old Main?</h2>
-
-    <div class="letter">
-        <p>Dear Family & Friends,</p>
+        <div class="letter animate-fade-in">
+            <h2>Why Old Main?</h2>
+            
+            <p>Dear Family & Friends,</p>
 
         <p>Welcome to the lawn of the building known as Old Main on the campus of Arizona State University. Old Main, now a preserved historical building, was designed by W.A. McGinnis, and it is the oldest building on campus. The construction started in 1894, twenty years before Arizona became a state and one year after Geranamo surrendered. This building was the first in Tempe to be wired for electricity. The 2nd and 3rd floors were classrooms, and the lower level was the library. When the library opened, it had a collection of two items: a dictionary and a terrestrial globe.</p>
 
@@ -128,6 +249,7 @@
 
         <p>Thank you for sharing this intentional & special day in this magical, historical place.</p>
 
+
         <div class="signature">
             Forks up,<br><br>
             Cathy Falls<br>
@@ -135,18 +257,43 @@
         </div>
     </div>
 
-    <div class="footer">
-        <p>We hope you enjoy this special day.</p>
-        <p>Taylor & Ryan</p>
+    <div class="divider">
+        <i class="fas fa-heart"></i>
     </div>
 
-    <div class="image-container">
-        <img src="https://i.imgur.com/jqbyVdc.jpg" alt="Old Main 1" loading="lazy"/>
+    <div class="footer animate-fade-in">
+        <div class="container">
+            <p>We hope you enjoy this special day.</p>
+            <p>-Taylor & Ryan</p>
+        </div>
     </div>
 
-    <div class="image-container">
-        <img src="https://i.imgur.com/mxGprKv.jpg" alt="Old Main 2" loading="lazy"/>
+    <div class="image-container animate-fade-in">
+        <img src="https://i.imgur.com/jqbyVdc.jpg" alt="Old Main 1"/>
     </div>
 
+    <div class="image-container animate-fade-in">
+        <img src="https://i.imgur.com/mxGprKv.jpg" alt="Old Main 2"/>
+    </div>
+</div>
+
+<script>
+    // Add animation classes as elements come into view
+    const observerOptions = {
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-in');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-fade-in').forEach((element) => {
+        observer.observe(element);
+    });
+</script>
 </body>
 </html>
