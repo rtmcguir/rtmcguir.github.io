@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Join us for Taylor & Ryan's wedding celebration on March 8th, 2025 at Old Main, Arizona State University">
     <title>Taylor & Ryan's Wedding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Taylor & Ryan's Wedding">
+    <meta property="og:description" content="Join us to celebrate Taylor & Ryan's wedding on March 8th, 2025">
+    <meta property="og:type" content="website">
+    
     <style>
         :root {
             --primary-color: #8B7355;
@@ -12,6 +23,21 @@
             --accent-color: #4A4A4A;
             --background-color: #FAF9F6;
             --text-color: #333;
+            
+            /* Dark mode colors */
+            --primary-color-dark: #A89078;
+            --secondary-color-dark: #E3C5A7;
+            --background-color-dark: #2A2A2A;
+            --text-color-dark: #F0F0F0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: var(--primary-color-dark);
+                --secondary-color: var(--secondary-color-dark);
+                --background-color: var(--background-color-dark);
+                --text-color: var(--text-color-dark);
+            }
         }
 
         * {
@@ -21,14 +47,31 @@
         }
 
         body {
-            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            font-family: 'Cormorant Garamond', Georgia, serif;
             line-height: 1.8;
             background-color: var(--background-color);
             color: var(--text-color);
-            font-size: 18px;
+            font-size: clamp(16px, 2vw, 18px);
+            overflow-x: hidden;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s ease;
+        }
+
+        .skip-link:focus {
+            top: 0;
         }
 
         .container {
+            width: 100%;
             max-width: 1000px;
             margin: 0 auto;
             padding: 2rem;
@@ -40,17 +83,65 @@
             background-color: var(--secondary-color);
             color: white;
             margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(210, 180, 140, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav.visible {
+            transform: translateY(0);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .nav li {
+            margin: 0 1rem;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 0.5rem;
+        }
+
+        .nav a:hover, .nav a:focus {
+            color: var(--accent-color);
         }
 
         .date {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             font-weight: 300;
             letter-spacing: 3px;
             margin: 1rem 0;
         }
 
+        .countdown {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            margin: 1rem 0;
+            font-weight: 300;
+        }
+
         .names {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 400;
             margin: 1.5rem 0;
             letter-spacing: 4px;
@@ -59,7 +150,7 @@
         .welcome {
             text-align: center;
             margin: 2rem 0;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 2vw, 1.2rem);
             line-height: 2;
         }
 
@@ -67,10 +158,9 @@
             text-align: center;
             max-width: 1000px; 
             margin: 0 auto; 
-            font-size: 1.3rem;
+            font-size: clamp(1.1rem, 2.2vw, 1.3rem);
             height: 50px;
             text-align: center;
-            line-height: 50px; 
             line-height: 2;
         }
 
@@ -79,24 +169,57 @@
             position: relative;
             overflow: hidden;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            aspect-ratio: 16 / 9;
+        }
+
+        /* New style specifically for the seating chart container */
+        .seating-chart {
+            position: relative;
+            aspect-ratio: auto; /* Remove fixed aspect ratio */
+            height: auto; /* Allow height to adjust to content */
+            max-height: 800px; /* Set a maximum height if needed */
         }
 
         .image-container img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             display: block;
-            transition: transform 0.3s ease;
+            transition: transform 0.5s ease;
+            will-change: transform;
+        }
+
+        /* New style specifically for the seating chart image */
+        .seating-chart img {
+            object-fit: contain; /* Change from cover to contain */
+            max-width: 100%;
+            height: auto; /* Allow height to adjust naturally */
         }
 
         .image-container:hover img {
-            transform: scale(1.02);
+            transform: scale(1.03);
+        }
+
+        .seating-chart {
+            position: relative;
+        }
+
+        .seating-info {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
         }
 
         h2 {
             text-align: center;
             color: var(--primary-color);
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
             margin: 3rem 0 2rem;
             position: relative;
             padding-bottom: 1rem;
@@ -117,8 +240,15 @@
             background-color: white;
             padding: 3rem;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
             margin: 2rem 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .letter {
+                background-color: #333;
+                box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            }
         }
 
         .letter p {
@@ -135,7 +265,7 @@
 
         .signature-seats {
             margin: 1rem 0;
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
             text-align: center;
             font-style: italic;
             color: var(--primary-color);
@@ -168,23 +298,106 @@
             color: var(--secondary-color);
         }
 
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 3rem 0;
+            width: 100%;
+        }
+
+        .gallery .image-container {
+            margin: 0;
+            cursor: pointer;
+            height: 250px;
+            flex: 0 0 auto;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(20px);
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 0.8;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
 
-            .names {
-                font-size: 2.5rem;
-            }
-
             .letter {
                 padding: 1.5rem;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
             }
         }
 
         /* Smooth scroll behavior */
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 70px;
         }
 
         /* Animation for content fade-in */
@@ -200,132 +413,377 @@
         }
 
         .animate-fade-in {
+            opacity: 0;
             animation: fadeIn 1s ease-out forwards;
+        }
+
+        /* Loading animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(139, 115, 85, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header animate-fade-in">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Loading screen -->
+    <div class="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" aria-label="Main navigation">
+        <ul>
+            <li><a href="#welcome">Welcome</a></li>
+            <li><a href="#seating">Seating</a></li>
+            <li><a href="#story">Why Old Main?</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="header animate-fade-in" id="welcome">
         <div class="container">
             <div class="date">March 8th, 2025</div>
-            <div class="names">TAYLOR & RYAN</div>
+            <div class="countdown" id="countdown"></div>
+            <h1 class="names">TAYLOR & RYAN</h1>
             <div class="welcome">
                 <p>Welcome to our wedding!</p>
             </div>
         </div>
-    </div>
+    </header>
 
-    <div class="container">
-        <div class="image-container animate-fade-in">
-            <img src="https://i.imgur.com/nxOSZSx.jpg" alt="Couple on brick path"/>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="signature-seats">Please find your seats.</div>  
-    </div>
-
-    <div class="container">
-        <div class="image-container animate-fade-in">
-            <img src="https://i.imgur.com/7Yan44K.jpg" alt="Seating Chart V2"/>
-        </div>      
-
-        <div class="divider">
-            <i class="fas fa-heart"></i>
-        </div>
-
-        <div class="letter animate-fade-in">
-            <h2>Why Old Main?</h2>
-            
-            <p>Dear Family & Friends,</p>
-
-        <p>Welcome to the lawn of the building known as Old Main on the campus of Arizona State University. Old Main, now a preserved historical building, was designed by W.A. McGinnis, and it is the oldest building on campus. The construction started in 1894, twenty years before Arizona became a state and one year after Geronimo surrendered. This building was the first in Tempe to be wired for electricity. The 2nd and 3rd floors were classrooms, and the lower level was the library. When the library opened, it had a collection of two items: a dictionary and a terrestrial globe.</p>
-
-        <p>Our family is in the architecture business, so I have to point out that this structure is made of three stories of tall brick, including a full basement set on a granite base. Its design is primarily Queen Anne, but it shows the influence of the Romanesque style. Note the projecting gabled pressed metal roof with a castellated cresting and metal ridge finials. The stairway is red sandstone. On the north side of the building, where you are sitting, you can see two projecting gables. The windows and doors have stone lintels, the upper-level windows on the north side have circular arches, and those on the south side have segmented windows.</p>
-
-        <p>In March of 1885, exactly 140 years ago, Arizona State University was established as the Territorial Normal School of Tempe. The 13th AZ legislature passed an act to create a normal school to train teachers for the Arizona Territory. Tuition was waived for any student willing to sign a contract to teach at an Arizona school. The school has gone through several name changes over the years: Arizona Territorial Normal School, Arizona Normal School, Normal School of Arizona, Tempe Normal School, and eventually Arizona State University.</p>
-
-        <p>It took twenty-two weeks to graduate with a teaching certificate. The enrollment standards were to be at least sixteen years of age and have a high school diploma. Tuition was $4 a month unless you promised to teach for a reasonable amount of time after graduation. In 1887, the first graduating class had five students, one of which was James McClintock. McClintock fell short of his agreement to teach. He taught for three years and then quit to go into the newspaper business. You will recognize that McClintock Drive, McClintock High School, and McClintock Hall were named after him.</p>
-
-        <p>When the school was founded, most students got to campus by horse, and the road directly behind us was the dirt path that brought them here, now known as University Drive. Students had to be careful when walking around all this commotion; today, it is no different. It was common for students on horseback to race up and down 8th Street, just to the east of this location.</p>
-
-        <p>The Arizona Territory was known as a brutal place, and it was thought it had no chance of becoming a state. Building a structure like Old Main was part of the plan to see Arizona as something other than the Wild West. The school liked to promote the fountain to show they had water and that it was safe to send your kids there.</p>
-
-        <p>On March 20, 1911 (113 years ago), President Theodore Roosevelt stood at the top of the stairs and dedicated Roosevelt Dam 60 miles Northeast of the Salt River Valley. The hope was that the dam would bring irrigation to farmers and as many as 100,000 people would live in the valley. Today, more students currently attend ASU alone (around 150,000), and the population of the greater Phoenix metropolitan area is now 4,845,832 people. Roosevelt spoke of the importance of an educated citizenry and showed examples like the school and the dam as signs that the gunfights and massacres of the territory were in the past.</p>
-
-        <p>While Old Main is a magnificent structure, the fountain deserves its own recognition. The story of the fountain begins with Emry Kopta from Austria. His father was a concert violinist, and his family was traveling with him to the U.S. They decided to move to San Francisco when Emry was 16. He was injured when a carriage overturned, and he had a permanent limp; therefore, he needed work that would allow him to sit all day. In 1906, he moved to France to study sculpting at the Sorbonne in Paris. In 1911, he moved to Los Angeles, where he met a young artist from AZ, Lon Megargee. Megargee went on to become a famous Southwestern painter.</p>
-
-        <p>In 1912, Kopta and Magargee were guests of John Lorenzo Hubbell at his trading post on the Navajo Reservation in Arizona. Artist William Leigh joined them, and the three men went to the Hopi Village of Polacca in Northern AZ to learn more about the American Indian and Hopi ceremonies. Here, Kopta met Tom Pavatea, a Hopi man who owned a trading post. Kopta fell in love with the Hopi people and moved to Polacca. He was adopted as a son by the Pavatea family. During his time on the reservation, he took photographs of daily life, ceremonies, and native people as studies for his sculptures.</p>
-
-        <p>He was commissioned to design the original fountain, including a bronze statue of a Hopi flute player atop a pedestal featuring Hopi Kachina designs. Before the statue could be cast, the College Board informed Kopta that it would no longer be included in the design due to lack of funds. The pedestal became the fountain that it is today, and the flute player model was donated to the ASU Art Museum. If you are interested in Kopta's work, you can find it at the Museum of Northern Arizona. The Native American influences and the original plan for the fountain are still meaningful to the Hopi tribe.</p>
-
-        <p>Taylor had a Native American English professor during her freshman year who brought them to the fountain for class and told them to get in and experience the mystical powers. He wanted them to write about how it made them feel; the answer was peaceful and brighter. If you get into the fountain, you will pay your respects to Kopta's legacy and how he attempted to honor the Hopi tribe. To this day, this professor still has his students climb into the fountain. I do not know if you will see any of the bridal party splash around in the fountain today, but if you do, just know it's to touch a bit of the fountain's magical properties and celebrate a big achievement -- like graduating -- which is an honored tradition.</p>
-
-        <h2>So ... why a marriage ceremony at Old Main?</h2>
-
-        <p>Besides it being super cool ...</p>
-
-        <p>One of the traits that Taylor and Ryan appreciate in each other is their love of learning and education. Their inner intellectuals found each other, and on their third date, they had lunch at the Postino Annex on the other side of University Drive and walked over here on a hot summer's day to see the fountain and Old Main. Much of their conversation on this date centered on their goals for the future: Ryan dreamed of attending law school, and Taylor was working full-time while completing her MBA.</p>
-
-        <p>Since that day, Ryan has been attending ASU's Sandra Day O'Connor School of Law, and Taylor has completed her MBA, now dreaming up her next big adventure. They had no idea at the time that two-and-a-half years later, this would be the spot where they would marry.</p>
-
-        <p>Fun fact: Eight people here today are ASU Sun Devils.</p>
-
-        <p>Old Main stands as a timeless witness to the journey of Taylor and Ryan---a steadfast symbol of their past, present, and future. Today, we are gathered here to embrace this moment where their love is celebrated and shared with you, and in the days to come, Old Main will remain a reminder of where their story began and where it will continue to unfold.</p>
-
-        <p>If you are the type of person who pays attention to details, you will see signs of personal and meaningful touches throughout the day. From the moment they were engaged, they knew they wanted to share the important places, people, and passions of their lives with you throughout this journey to "I do." Taylor's artistic interests were shared with you in the Save the Date video and other videos to come; this is the place where she studied that skill. Ryan's personal touches will be apparent shortly. If you look around, you will meet the people who mean everything to them. Their fourth date was at Spinatos, where we will soon join as a united family and celebrate them as a married couple.</p>
-
-        <p>Thank you for sharing this intentional & special day in this magical, historical place.</p>
-
-
-        <div class="signature">
-            Forks up,<br><br>
-            Cathy Falls<br>
-            Mother of the Bride
-        </div>
-    </div>
-
-    <div class="divider">
-        <i class="fas fa-heart"></i>
-    </div>
-
-    <div class="footer animate-fade-in">
+    <main id="main-content">
         <div class="container">
-            <p>We hope you enjoy this special day.</p>
-            <p>Taylor & Ryan</p>
+            <figure class="image-container animate-fade-in">
+                <img src="https://i.imgur.com/nxOSZSx.jpg" alt="Taylor and Ryan walking on a brick path holding hands" loading="lazy"/>
+            </figure>
         </div>
+
+        <div class="container" id="seating">
+            <h2 class="signature-seats animate-fade-in">Please find your seats</h2>  
+        </div>
+
+        <div class="container">
+            <figure class="image-container seating-chart animate-fade-in">
+                <img src="https://i.imgur.com/7Yan44K.jpg" alt="Wedding seating chart showing table assignments for all guests" loading="lazy"/>
+                <div class="seating-info" id="seating-info" tabindex="0" aria-label="Click for seating information">
+                    <i class="fas fa-search"></i> Zoom
+                </div>
+            </figure>      
+
+            <div class="divider">
+                <i class="fas fa-heart"></i>
+            </div>
+
+            <article class="letter animate-fade-in" id="story">
+                <h2>Why Old Main?</h2>
+                
+                <p>Dear Family & Friends,</p>
+
+                <p>Welcome to the lawn of the building known as Old Main on the campus of Arizona State University. Old Main, now a preserved historical building, was designed by W.A. McGinnis, and it is the oldest building on campus. The construction started in 1894, twenty years before Arizona became a state and one year after Geronimo surrendered. This building was the first in Tempe to be wired for electricity. The 2nd and 3rd floors were classrooms, and the lower level was the library. When the library opened, it had a collection of two items: a dictionary and a terrestrial globe.</p>
+
+                <p>Our family is in the architecture business, so I have to point out that this structure is made of three stories of tall brick, including a full basement set on a granite base. Its design is primarily Queen Anne, but it shows the influence of the Romanesque style. Note the projecting gabled pressed metal roof with a castellated cresting and metal ridge finials. The stairway is red sandstone. On the north side of the building, where you are sitting, you can see two projecting gables. The windows and doors have stone lintels, the upper-level windows on the north side have circular arches, and those on the south side have segmented windows.</p>
+
+                <p>In March of 1885, exactly 140 years ago, Arizona State University was established as the Territorial Normal School of Tempe. The 13th AZ legislature passed an act to create a normal school to train teachers for the Arizona Territory. Tuition was waived for any student willing to sign a contract to teach at an Arizona school. The school has gone through several name changes over the years: Arizona Territorial Normal School, Arizona Normal School, Normal School of Arizona, Tempe Normal School, and eventually Arizona State University.</p>
+
+                <p>It took twenty-two weeks to graduate with a teaching certificate. The enrollment standards were to be at least sixteen years of age and have a high school diploma. Tuition was $4 a month unless you promised to teach for a reasonable amount of time after graduation. In 1887, the first graduating class had five students, one of which was James McClintock. McClintock fell short of his agreement to teach. He taught for three years and then quit to go into the newspaper business. You will recognize that McClintock Drive, McClintock High School, and McClintock Hall were named after him.</p>
+
+                <p>When the school was founded, most students got to campus by horse, and the road directly behind us was the dirt path that brought them here, now known as University Drive. Students had to be careful when walking around all this commotion; today, it is no different. It was common for students on horseback to race up and down 8th Street, just to the east of this location.</p>
+
+                <p>The Arizona Territory was known as a brutal place, and it was thought it had no chance of becoming a state. Building a structure like Old Main was part of the plan to see Arizona as something other than the Wild West. The school liked to promote the fountain to show they had water and that it was safe to send your kids there.</p>
+
+                <p>On March 20, 1911 (113 years ago), President Theodore Roosevelt stood at the top of the stairs and dedicated Roosevelt Dam 60 miles Northeast of the Salt River Valley. The hope was that the dam would bring irrigation to farmers and as many as 100,000 people would live in the valley. Today, more students currently attend ASU alone (around 150,000), and the population of the greater Phoenix metropolitan area is now 4,845,832 people. Roosevelt spoke of the importance of an educated citizenry and showed examples like the school and the dam as signs that the gunfights and massacres of the territory were in the past.</p>
+
+                <p>While Old Main is a magnificent structure, the fountain deserves its own recognition. The story of the fountain begins with Emry Kopta from Austria. His father was a concert violinist, and his family was traveling with him to the U.S. They decided to move to San Francisco when Emry was 16. He was injured when a carriage overturned, and he had a permanent limp; therefore, he needed work that would allow him to sit all day. In 1906, he moved to France to study sculpting at the Sorbonne in Paris. In 1911, he moved to Los Angeles, where he met a young artist from AZ, Lon Megargee. Megargee went on to become a famous Southwestern painter.</p>
+
+                <p>In 1912, Kopta and Magargee were guests of John Lorenzo Hubbell at his trading post on the Navajo Reservation in Arizona. Artist William Leigh joined them, and the three men went to the Hopi Village of Polacca in Northern AZ to learn more about the American Indian and Hopi ceremonies. Here, Kopta met Tom Pavatea, a Hopi man who owned a trading post. Kopta fell in love with the Hopi people and moved to Polacca. He was adopted as a son by the Pavatea family. During his time on the reservation, he took photographs of daily life, ceremonies, and native people as studies for his sculptures.</p>
+
+                <p>He was commissioned to design the original fountain, including a bronze statue of a Hopi flute player atop a pedestal featuring Hopi Kachina designs. Before the statue could be cast, the College Board informed Kopta that it would no longer be included in the design due to lack of funds. The pedestal became the fountain that it is today, and the flute player model was donated to the ASU Art Museum. If you are interested in Kopta's work, you can find it at the Museum of Northern Arizona. The Native American influences and the original plan for the fountain are still meaningful to the Hopi tribe.</p>
+
+                <p>Taylor had a Native American English professor during her freshman year who brought them to the fountain for class and told them to get in and experience the mystical powers. He wanted them to write about how it made them feel; the answer was peaceful and brighter. If you get into the fountain, you will pay your respects to Kopta's legacy and how he attempted to honor the Hopi tribe. To this day, this professor still has his students climb into the fountain. I do not know if you will see any of the bridal party splash around in the fountain today, but if you do, just know it's to touch a bit of the fountain's magical properties and celebrate a big achievement -- like graduating -- which is an honored tradition.</p>
+
+                <h2>So ... why a marriage ceremony at Old Main?</h2>
+
+                <p>Besides it being super cool ...</p>
+
+                <p>One of the traits that Taylor and Ryan appreciate in each other is their love of learning and education. Their inner intellectuals found each other, and on their third date, they had lunch at the Postino Annex on the other side of University Drive and walked over here on a hot summer's day to see the fountain and Old Main. Much of their conversation on this date centered on their goals for the future: Ryan dreamed of attending law school, and Taylor was working full-time while completing her MBA.</p>
+
+                <p>Since that day, Ryan has been attending ASU's Sandra Day O'Connor School of Law, and Taylor has completed her MBA, now dreaming up her next big adventure. They had no idea at the time that two-and-a-half years later, this would be the spot where they would marry.</p>
+
+                <p>Fun fact: Eight people here today are ASU Sun Devils.</p>
+
+                <p>Old Main stands as a timeless witness to the journey of Taylor and Ryan---a steadfast symbol of their past, present, and future. Today, we are gathered here to embrace this moment where their love is celebrated and shared with you, and in the days to come, Old Main will remain a reminder of where their story began and where it will continue to unfold.</p>
+
+                <p>If you are the type of person who pays attention to details, you will see signs of personal and meaningful touches throughout the day. From the moment they were engaged, they knew they wanted to share the important places, people, and passions of their lives with you throughout this journey to "I do." Taylor's artistic interests were shared with you in the Save the Date video and other videos to come; this is the place where she studied that skill. Ryan's personal touches will be apparent shortly. If you look around, you will meet the people who mean everything to them. Their fourth date was at Spinatos, where we will soon join as a united family and celebrate them as a married couple.</p>
+
+                <p>Thank you for sharing this intentional & special day in this magical, historical place.</p>
+
+                <div class="signature">
+                    Forks up,<br><br>
+                    Cathy Falls<br>
+                    Mother of the Bride
+                </div>
+            </article>
+
+            <div class="divider">
+                <i class="fas fa-heart"></i>
+            </div>
+        </div>
+
+        <section class="gallery" id="gallery" aria-label="Photo gallery">
+            <figure class="image-container animate-fade-in">
+                <img src="https://i.imgur.com/wpNMzlf.jpg" alt="Taylor ASU Graduation" loading="lazy" data-full="/api/placeholder/1000/750"/>
+            </figure>
+            <figure class="image-container animate-fade-in">
+                <img src="https://i.imgur.com/jqbyVdc.jpg" alt="Old Main 1" loading="lazy" data-full="/api/placeholder/1000/750"/>
+            </figure>
+            <figure class="image-container animate-fade-in">
+                <img src="https://i.imgur.com/mxGprKv.jpg" alt="Old Main 2" loading="lazy" data-full="/api/placeholder/1000/750"/>
+            </figure>
+        </section>
+    </main>
+
+    <footer class="footer animate-fade-in">
+        <div class="container">
+            <p>We look forward to celebrating with you.</p>
+            <p>Taylor & Ryan</p>
+            <p class="mt-4 text-sm">March 8th, 2025 • Old Main, ASU</p>
+        </div>
+    </footer>
+
+    <!-- Modal for image viewing -->
+    <div class="modal" id="image-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <span class="close-modal" id="close-modal" aria-label="Close image">&times;</span>
+        <img class="modal-content" id="modal-image" alt="Enlarged wedding photo"/>
     </div>
 
-    <div class="image-container animate-fade-in">
-        <img src="https://i.imgur.com/wpNMzlf.jpg" alt="Taylor ASU Graduation"/>
-    </div>
+    <!-- Back to top button -->
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
-    <div class="image-container animate-fade-in">
-        <img src="https://i.imgur.com/jqbyVdc.jpg" alt="Old Main 1"/>
-    </div>
-
-    <div class="image-container animate-fade-in">
-        <img src="https://i.imgur.com/mxGprKv.jpg" alt="Old Main 2"/>
-    </div>
-</div>
-
-<script>
-    // Add animation classes as elements come into view
-    const observerOptions = {
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in');
-            }
+    <script>
+        // Wait for all content to load
+        window.addEventListener('load', () => {
+            // Hide loading screen
+            document.querySelector('.loading').classList.add('hidden');
+            
+            // Initialize animations
+            initAnimations();
+            
+            // Setup countdown timer
+            initCountdown();
+            
+            // Setup navigation
+            initNavigation();
+            
+            // Setup gallery
+            initGallery();
+            
+            // Setup back to top button
+            initBackToTop();
+            
+            // Setup seating chart zoom
+            initSeatingZoom();
         });
-    }, observerOptions);
 
-    document.querySelectorAll('.animate-fade-in').forEach((element) => {
-        observer.observe(element);
-    });
-</script>
+        function initAnimations() {
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                        observer.unobserve(entry.target); // Stop observing once animated
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.animate-fade-in').forEach((element) => {
+                observer.observe(element);
+            });
+        }
+
+        function initCountdown() {
+            // Updated time to 4:30 PM (16:30:00) with Phoenix timezone (MST/UTC-7)
+            const weddingDate = new Date('March 8, 2025 16:30:00 MST').getTime();
+            const countdownEl = document.getElementById('countdown');
+    
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = weddingDate - now;
+        
+                if (distance < 0) {
+                    countdownEl.innerHTML = "Today is the day!";
+                    return;
+                }
+        
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        
+                countdownEl.innerHTML = `${days} days, ${hours} hours, ${minutes} minutes until we say "I do"`;
+            }
+    
+            updateCountdown();
+            setInterval(updateCountdown, 60000); // Update every minute
+        }
+
+        function initNavigation() {
+            let lastScrollY = window.scrollY;
+            const nav = document.querySelector('.nav');
+            
+            // Show/hide navigation based on scroll direction
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const isScrollingDown = scrollY > lastScrollY;
+                
+                // Show nav when scrolling past header
+                if (scrollY > 100) {
+                    nav.classList.add('visible');
+                } else {
+                    nav.classList.remove('visible');
+                }
+                
+                lastScrollY = scrollY;
+            });
+            
+            // Smooth scroll for navigation links
+            document.querySelectorAll('.nav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        function initGallery() {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            const closeBtn = document.getElementById('close-modal');
+            
+            // Open modal when clicking on gallery images
+            document.querySelectorAll('.gallery .image-container img').forEach(img => {
+                img.addEventListener('click', function() {
+                    modal.classList.add('open');
+                    modalImg.src = this.getAttribute('data-full') || this.src;
+                    modalImg.alt = this.alt;
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+                });
+                
+                // Make gallery images keyboard accessible
+                img.parentElement.setAttribute('tabindex', '0');
+                img.parentElement.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        img.click();
+                    }
+                });
+            });
+            
+            // Close modal
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal with escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('open')) {
+                    closeModal();
+                }
+            });
+            
+            function closeModal() {
+                modal.classList.remove('open');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+        }
+
+        function initBackToTop() {
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        function initSeatingZoom() {
+            const seatingInfo = document.getElementById('seating-info');
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            
+            seatingInfo.addEventListener('click', function() {
+                const seatingChart = this.closest('.seating-chart').querySelector('img');
+                modal.classList.add('open');
+                modalImg.src = seatingChart.src;
+                modalImg.alt = seatingChart.alt;
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Make seating info keyboard accessible
+            seatingInfo.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
