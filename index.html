@@ -210,10 +210,19 @@
             bottom: 20px;
             right: 20px;
             background: rgba(255, 255, 255, 0.8);
+            color: #333; /* Adding explicit text color for light mode */
             padding: 0.5rem 1rem;
             border-radius: 4px;
             font-size: 0.9rem;
             cursor: pointer;
+        }
+        
+        /* Add this media query for dark mode */
+        @media (prefers-color-scheme: dark) {
+            .seating-info {
+                background: rgba(70, 70, 70, 0.8); /* Darker background for dark mode */
+                color: #F0EAE6; /* Using your warm white text color from dark mode */
+            }
         }
 
         h2 {
