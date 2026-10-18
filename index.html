@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#7c3aed">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>KinMorph AI — Future Offspring Trait & Portrait Predictor</title>
     <!-- Tailwind CDN: fine for development. For production, compile Tailwind (npx tailwindcss) and ship the CSS file instead. -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,9 +42,40 @@
         }
     </script>
     <style>
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
         body {
             background: radial-gradient(circle at top left, #f5f3ff 0%, #f8fafc 45%, #fff1f2 100%);
             min-height: 100vh;
+            min-height: 100dvh; /* mobile browsers: accounts for collapsing address bar */
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            /* notch / home-indicator safe areas */
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        header { padding-top: env(safe-area-inset-top); }
+        /* Remove 300ms double-tap delay and accidental zoom on controls */
+        button, [role="button"], label, input { touch-action: manipulation; }
+        /* Keep scrolled-to sections from hiding under the sticky header */
+        #statusAlert, #loadingSection, #resultsSection { scroll-margin-top: 5.5rem; }
+        /* iOS Safari zooms into inputs with font-size < 16px */
+        input[type="password"], input[type="text"] { font-size: 16px; }
+        @media (min-width: 640px) {
+            input[type="password"], input[type="text"] { font-size: 14px; }
+        }
+        /* Larger, easier-to-tap checkbox on touch screens */
+        @media (pointer: coarse) {
+            #consentCheck { width: 1.35rem; height: 1.35rem; }
+            #clearParent1, #clearParent2 { padding: 0.5rem 0.75rem; }
+            #downloadPortraitBtn { padding: 0.75rem; }
+        }
+        /* Disable sticky hover styling on touch devices */
+        @media (hover: none) {
+            .drop-zone:hover { border-color: #cbd5e1; }
         }
         .drop-zone-active {
             border-color: #7c3aed !important;
@@ -73,21 +107,22 @@
 
     <!-- Header / Navbar -->
     <header class="sticky top-0 z-30 backdrop-blur-md bg-white/80 border-b border-slate-200/80 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl dna-loader flex items-center justify-center text-white shadow-md shadow-brand-500/20">
                     <i class="ph-bold ph-dna text-2xl"></i>
                 </div>
                 <div>
                     <h1 class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-slate-900 flex items-center gap-2">
-                        KinMorph <span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-100 text-brand-700 border border-brand-200">AI Genetics Lab</span>
+                        KinMorph <span class="hidden min-[400px]:inline text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-100 text-brand-700 border border-brand-200 whitespace-nowrap">AI Genetics Lab</span>
                     </h1>
                     <p class="text-xs text-slate-500 hidden sm:block">Morphological Trait Analysis & Offspring Portrait Synthesis</p>
                 </div>
             </div>
-            <button id="demoBtn" type="button" class="text-xs sm:text-sm font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+            <button id="demoBtn" type="button" class="shrink-0 text-xs sm:text-sm font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 px-3.5 py-2.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
                 <i class="ph-bold ph-magic-wand"></i>
-                <span>Load Sample Portraits</span>
+                <span class="hidden sm:inline">Load Sample Portraits</span>
+                <span class="sm:hidden">Samples</span>
             </button>
         </div>
     </header>
@@ -140,7 +175,7 @@
                         <div class="w-16 h-16 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center text-brand-600 mb-3 group-hover:scale-105 transition-transform">
                             <i class="ph-duotone ph-user-focus text-3xl"></i>
                         </div>
-                        <p class="font-semibold text-slate-700 text-sm sm:text-base mb-1">Click to upload or drag & drop</p>
+                        <p class="upload-hint font-semibold text-slate-700 text-sm sm:text-base mb-1">Click to upload or drag & drop</p>
                         <p class="text-xs text-slate-400">JPG, PNG, or WEBP (automatically optimized)</p>
                     </div>
 
@@ -178,7 +213,7 @@
                         <div class="w-16 h-16 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center text-pink-600 mb-3 group-hover:scale-105 transition-transform">
                             <i class="ph-duotone ph-user-focus text-3xl"></i>
                         </div>
-                        <p class="font-semibold text-slate-700 text-sm sm:text-base mb-1">Click to upload or drag & drop</p>
+                        <p class="upload-hint font-semibold text-slate-700 text-sm sm:text-base mb-1">Click to upload or drag & drop</p>
                         <p class="text-xs text-slate-400">JPG, PNG, or WEBP (automatically optimized)</p>
                     </div>
 
@@ -266,9 +301,9 @@
 
             <!-- NEW: Consent & privacy notice -->
             <div class="mt-6 pt-5 border-t border-slate-200/80">
-                <div class="mb-4 max-w-sm">
+                <div class="mb-4 w-full sm:max-w-sm">
                     <label for="accessCode" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Access Code</label>
-                    <input id="accessCode" type="password" autocomplete="off" placeholder="Enter the access code you were given" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                    <input id="accessCode" name="kinmorph-access" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" data-1p-ignore data-lpignore="true" placeholder="Enter the access code you were given" class="w-full px-3.5 py-3 sm:py-2.5 rounded-xl border border-slate-300 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
                 </div>
                 <label class="flex items-start gap-3 text-xs sm:text-sm text-slate-700 cursor-pointer">
                     <input id="consentCheck" type="checkbox" class="mt-0.5 w-4 h-4 accent-brand-600 shrink-0" />
@@ -294,7 +329,7 @@
                 <div id="loadingBar" class="dna-loader h-full w-1/3 transition-all duration-700 rounded-full"></div>
             </div>
             <!-- FIX: two indicators to match the two real stages (was 3 indicators vs "Step 1/2") -->
-            <div class="flex justify-center gap-6 text-xs font-medium text-slate-400">
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs font-medium text-slate-400">
                 <span id="stepIndicator1" class="flex items-center gap-1">
                     <i class="ph-bold ph-circle-dashed"></i> 1. Trait Analysis
                 </span>
@@ -337,7 +372,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-200/80 mb-4">
+                    <div class="flex items-center justify-between gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 mb-4">
                         <div class="flex items-center gap-2.5">
                             <img id="miniParent1" src="" alt="Parent 1" class="w-10 h-10 rounded-xl object-cover border border-indigo-200 shadow-sm" />
                             <span class="text-xs font-semibold text-slate-600">Parent 1</span>
@@ -398,7 +433,7 @@
                                 <i class="ph-bold ph-copy"></i> Copy Prompt
                             </button>
                         </div>
-                        <p id="visualPromptText" class="text-xs text-slate-300 font-mono leading-relaxed"></p>
+                        <p id="visualPromptText" class="text-xs text-slate-300 font-mono leading-relaxed break-words" style="overflow-wrap:anywhere"></p>
                         <div class="mt-4 pt-3 border-t border-slate-800 flex items-center gap-2 text-[11px] text-slate-400">
                             <i class="ph-fill ph-info text-brand-400 text-sm shrink-0"></i>
                             <span>Note: Real-world human genetics involves thousands of polygenic loci and environmental factors. This breakdown is for educational and entertainment purposes only.</span>
@@ -567,16 +602,21 @@
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onerror = () => showMessage('Upload Failed', 'The image could not be read. Please try another file.', 'error');
-            reader.onload = (event) => {
+            // Mobile-friendly: decode via an object URL instead of reading the whole file into a
+            // giant base64 string first (phone photos are large and memory is tight on mobile browsers).
+            {
+                const objectUrl = URL.createObjectURL(file);
                 const img = new Image();
-                img.onerror = () => showMessage('Unsupported Image', 'That file could not be decoded as an image. Try a JPG or PNG.', 'error');
+                img.onerror = () => {
+                    URL.revokeObjectURL(objectUrl);
+                    showMessage('Unsupported Image', 'That file could not be decoded as an image. Try a JPG or PNG.', 'error');
+                };
                 img.onload = () => {
+                    URL.revokeObjectURL(objectUrl);
                     const canvas = $('helperCanvas');
                     const maxDim = 800;
-                    let width = img.width;
-                    let height = img.height;
+                    let width = img.naturalWidth || img.width;
+                    let height = img.naturalHeight || img.height;
 
                     if (width > height && width > maxDim) {
                         height = Math.round((height * maxDim) / width);
@@ -602,9 +642,8 @@
                     });
                     hideMessage();
                 };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+                img.src = objectUrl;
+            }
         }
 
         function setParentImage(parentNum, imageData) {
@@ -647,6 +686,16 @@
 
         setupUploadZone(dropZone1, fileInput1, 1);
         setupUploadZone(dropZone2, fileInput2, 2);
+
+        // Touch devices have no drag & drop, so change the wording to "Tap to upload"
+        if (window.matchMedia('(pointer: coarse)').matches) {
+            document.querySelectorAll('.upload-hint').forEach((el) => {
+                el.textContent = 'Tap to take or choose a photo';
+            });
+            [dropZone1, dropZone2].forEach((z, i) => {
+                z.setAttribute('aria-label', `Choose Parent ${i + 1} portrait`);
+            });
+        }
 
         // ==========================================
         // OPTION SELECTORS (AGE & PRESENTATION)
@@ -1146,18 +1195,51 @@
             }
         });
 
-        downloadPortraitBtn.addEventListener('click', () => {
+        downloadPortraitBtn.addEventListener('click', async () => {
             const src = offspringImage.src;
             if (!src) return;
             // FIX: derive the extension from the actual MIME type instead of always using .png
             const mime = (src.match(/^data:(image\/[a-z0-9.+-]+);/i) || [])[1] || 'image/png';
             const ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[mime.toLowerCase()] || 'png';
+            const filename = `KinMorph-Predicted-Child-${Date.now()}.${ext}`;
+
+            let blob;
+            try {
+                blob = await (await fetch(src)).blob();
+            } catch {
+                blob = null;
+            }
+
+            // Mobile: use the native share sheet (lets iPhone/Android users "Save Image" to Photos)
+            const isTouch = window.matchMedia('(pointer: coarse)').matches;
+            if (blob && isTouch && navigator.canShare && navigator.share) {
+                try {
+                    const file = new File([blob], filename, { type: blob.type || mime });
+                    if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({ files: [file], title: 'KinMorph portrait' });
+                        return;
+                    }
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return; // user closed the share sheet
+                    // otherwise fall through to the download fallback
+                }
+            }
+
+            // Desktop / fallback: standard download (blob URLs are more reliable than huge data URLs)
+            const href = blob ? URL.createObjectURL(blob) : src;
             const link = document.createElement('a');
-            link.href = src;
-            link.download = `KinMorph-Predicted-Child-${Date.now()}.${ext}`;
+            link.href = href;
+            link.download = filename;
+            link.rel = 'noopener';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            if (blob) setTimeout(() => URL.revokeObjectURL(href), 10000);
+
+            // iOS Safari may ignore the download attribute; give a hint if so
+            if (isTouch && /iP(hone|ad|od)/.test(navigator.userAgent)) {
+                showMessage('Saving on iPhone', 'If the image opened instead of downloading, press and hold it and choose "Add to Photos" or "Save Image".', 'warning');
+            }
         });
 
         // FIX: modern Clipboard API first, execCommand fallback (needed in some iframes / older browsers)
