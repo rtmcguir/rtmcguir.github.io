@@ -3,800 +3,1193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Join us for Taylor & Ryan's wedding celebration on March 8th, 2025 at Old Main, Arizona State University">
-    <title>Taylor & Ryan's Wedding</title>
+    <title>KinMorph AI — Future Offspring Trait & Portrait Predictor</title>
+    <!-- Tailwind CDN: fine for development. For production, compile Tailwind (npx tailwindcss) and ship the CSS file instead. -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
-    
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="Taylor & Ryan's Wedding">
-    <meta property="og:description" content="Join us to celebrate Taylor & Ryan's wedding on March 8th, 2025">
-    <meta property="og:type" content="website">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd', // FIX: previously undefined but used
+                            400: '#a78bfa', // FIX: previously undefined but used
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            900: '#4c1d95',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary-color: #8B7355;
-            --secondary-color: #D2B48C;
-            --accent-color: #4A4A4A;
-            --background-color: #FAF9F6;
-            --text-color: #333;
-            
-            --primary-color-dark: #9F8170;      /* Slightly darker primary */
-            --secondary-color-dark: #6D4C41;    /* Brown 700 material design */
-            --accent-color-dark: #B0A090;       /* Muted accent */
-            --background-color-dark: #262220;   /* Dark brown background */
-            --text-color-dark: #F0EAE6;         /* Warm white text */
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --primary-color: var(--primary-color-dark);
-                --secondary-color: var(--secondary-color-dark);
-                --background-color: var(--background-color-dark);
-                --text-color: var(--text-color-dark);
-            }
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            line-height: 1.8;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            font-size: clamp(16px, 2vw, 18px);
-            overflow-x: hidden;
+            background: radial-gradient(circle at top left, #f5f3ff 0%, #f8fafc 45%, #fff1f2 100%);
+            min-height: 100vh;
         }
-
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--primary-color);
-            color: white;
-            padding: 8px;
-            z-index: 100;
-            transition: top 0.3s ease;
+        .drop-zone-active {
+            border-color: #7c3aed !important;
+            background-color: rgba(139, 92, 246, 0.06) !important;
+            transform: scale(1.01);
         }
-
-        .skip-link:focus {
-            top: 0;
+        .dna-loader {
+            background: linear-gradient(90deg, #8b5cf6, #ec4899, #6366f1);
+            background-size: 200% 200%;
+            animation: gradientMove 2.5s ease infinite;
         }
-
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-
-        .header {
-            text-align: center;
-            padding: 4rem 0;
-            background-color: var(--secondary-color);
-            color: white;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
+        /* Visible keyboard focus */
+        .drop-zone:focus-visible, button:focus-visible, input[type="checkbox"]:focus-visible {
+            outline: 3px solid #8b5cf6;
+            outline-offset: 2px;
         }
-
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(210, 180, 140, 0.9);
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .nav.visible {
-            transform: translateY(0);
-        }
-
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        .nav li {
-            margin: 0 1rem;
-        }
-
-        .nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-            padding: 0.5rem;
-        }
-
-        .nav a:hover, .nav a:focus {
-            color: var(--accent-color);
-        }
-
-        .date {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            font-weight: 300;
-            letter-spacing: 3px;
-            margin: 1rem 0;
-        }
-
-        .countdown {
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            margin: 1rem 0;
-            font-weight: 300;
-        }
-
-        .names {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 400;
-            margin: 1.5rem 0;
-            letter-spacing: 4px;
-        }
-
-        .welcome {
-            text-align: center;
-            margin: 2rem 0;
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            line-height: 2;
-        }
-
-        .welcome-seats {
-            text-align: center;
-            max-width: 1000px; 
-            margin: 0 auto; 
-            font-size: clamp(1.1rem, 2.2vw, 1.3rem);
-            height: 50px;
-            text-align: center;
-            line-height: 2;
-        }
-
-        .image-container {
-            margin: 3rem 0;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            aspect-ratio: 16 / 9;
-        }
-
-        /* New style specifically for the seating chart container */
-        .seating-chart {
-            position: relative;
-            aspect-ratio: auto; /* Remove fixed aspect ratio */
-            height: auto; /* Allow height to adjust to content */
-            max-height: 800px; /* Set a maximum height if needed */
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s ease;
-            will-change: transform;
-        }
-
-        /* New style specifically for the seating chart image */
-        .seating-chart img {
-            object-fit: contain; /* Change from cover to contain */
-            max-width: 100%;
-            height: auto; /* Allow height to adjust naturally */
-        }
-
-        .image-container:hover img {
-            transform: scale(1.03);
-        }
-
-        .seating-chart {
-            position: relative;
-        }
-
-        .seating-info {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            color: #333; /* Adding explicit text color for light mode */
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        
-        /* Add this media query for dark mode */
-        @media (prefers-color-scheme: dark) {
-            .seating-info {
-                background: rgba(70, 70, 70, 0.8); /* Darker background for dark mode */
-                color: #F0EAE6; /* Using your warm white text color from dark mode */
-            }
-        }
-
-        h2 {
-            text-align: center;
-            color: var(--primary-color);
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            margin: 3rem 0 2rem;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 2px;
-            background-color: var(--secondary-color);
-        }
-
-        .letter {
-            background-color: white;
-            padding: 3rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-            margin: 2rem 0;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .letter {
-                background-color: #333;
-                box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-            }
-        }
-
-        .letter p {
-            margin-bottom: 1.5rem;
-            text-align: justify;
-        }
-
-        .signature {
-            margin: 3rem 0;
-            text-align: center;
-            font-style: italic;
-            color: var(--primary-color);
-        }
-
-        .signature-seats {
-            margin: 1rem 0;
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            text-align: center;
-            font-style: italic;
-            color: var(--primary-color);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 3rem 0;
-            background-color: var(--secondary-color);
-            color: white;
-            margin-top: 3rem;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 2rem 0;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background-color: var(--secondary-color);
-        }
-
-        .divider i {
-            padding: 0 1rem;
-            color: var(--secondary-color);
-        }
-
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5rem;
-            margin: 3rem 0;
-            width: 100%;
-        }
-
-        .gallery .image-container {
-            margin: 0;
-            cursor: pointer;
-            height: 250px;
-            flex: 0 0 auto;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-        }
-
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary-color);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-            transform: translateY(20px);
-            z-index: 100;
-        }
-
-        .back-to-top.visible {
-            opacity: 0.8;
-            transform: translateY(0);
-        }
-
-        .back-to-top:hover {
-            opacity: 1;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .letter {
-                padding: 1.5rem;
-            }
-
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Smooth scroll behavior */
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 70px;
-        }
-
-        /* Animation for content fade-in */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in {
-            opacity: 0;
-            animation: fadeIn 1s ease-out forwards;
-        }
-
-        /* Loading animation */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--background-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .loading.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(139, 115, 85, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body>
-    <!-- Skip to content link for accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+<body class="text-slate-800 antialiased selection:bg-brand-500 selection:text-white pb-16">
 
-    <!-- Loading screen -->
-    <div class="loading">
-        <div class="loading-spinner"></div>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="nav" aria-label="Main navigation">
-        <ul>
-            <li><a href="#welcome">Welcome</a></li>
-            <li><a href="#seating">Seating</a></li>
-            <li><a href="#story">Why Old Main?</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-        </ul>
-    </nav>
-
-    <!-- Header -->
-    <header class="header animate-fade-in" id="welcome">
-        <div class="container">
-            <div class="date">March 8th, 2025</div>
-            <h1 class="names">TAYLOR & RYAN</h1>
-            <div class="welcome">
-                <p>Welcome to our wedding!</p>
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-30 backdrop-blur-md bg-white/80 border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl dna-loader flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <i class="ph-bold ph-dna text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-slate-900 flex items-center gap-2">
+                        KinMorph <span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-100 text-brand-700 border border-brand-200">AI Genetics Lab</span>
+                    </h1>
+                    <p class="text-xs text-slate-500 hidden sm:block">Morphological Trait Analysis & Offspring Portrait Synthesis</p>
+                </div>
             </div>
+            <button id="demoBtn" type="button" class="text-xs sm:text-sm font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                <i class="ph-bold ph-magic-wand"></i>
+                <span>Load Sample Portraits</span>
+            </button>
         </div>
     </header>
 
-    <main id="main-content">
-        <div class="container" id="seating">
-            <h2 class="countdown animate-fade-in" id="countdown"></h2>
-        <div class="container">
-            <figure class="image-container animate-fade-in">
-                <img src="https://i.imgur.com/nxOSZSx.jpg" alt="Taylor and Ryan at Old Main" loading="lazy" data-full="https://i.imgur.com/nxOSZSx.jpg"/>
-            </figure>
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10">
+
+        <!-- Intro Banner -->
+        <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+            <h2 class="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight mb-3">
+                Discover What Your Future Child Might Look Like
+            </h2>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                Upload two clear portraits. Our multimodal AI examines visible phenotypic traits—including eye morphology, hair texture, facial bone structure, and skin tone—to build an illustrative, entertainment-only prediction and generate a portrait.
+            </p>
         </div>
 
-        <div class="container" id="seating">
-            <h2 class="signature-seats animate-fade-in">Please find your seats</h2>  
+        <!-- Alert / Notification Box -->
+        <div id="statusAlert" role="alert" aria-live="polite" class="hidden max-w-3xl mx-auto mb-6 p-4 rounded-2xl border flex items-start gap-3 shadow-sm transition-all">
+            <i id="statusAlertIcon" class="ph-fill ph-warning-circle text-xl shrink-0 mt-0.5"></i>
+            <div class="flex-1 text-sm">
+                <h4 id="statusAlertTitle" class="font-semibold">Notice</h4>
+                <p id="statusAlertMessage" class="text-slate-600 mt-0.5"></p>
+            </div>
+            <button type="button" id="alertCloseBtn" aria-label="Dismiss notification" class="text-slate-400 hover:text-slate-600 p-1">
+                <i class="ph-bold ph-x"></i>
+            </button>
         </div>
 
-        <div class="container">
-            <figure class="image-container seating-chart animate-fade-in">
-                <img src="https://i.imgur.com/7Yan44K.jpg" alt="Wedding seating chart showing table assignments for all guests" loading="lazy"/>
-                <div class="seating-info" id="seating-info" tabindex="0" aria-label="Click for seating information">
-                    <i class="fas fa-search"></i> Zoom
+        <!-- Step 1: Parent Photo Upload Section -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Parent 1 Card -->
+            <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/90 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-display font-bold text-sm flex items-center justify-center">1</span>
+                        <div>
+                            <h3 class="font-display font-bold text-slate-900 text-base">Parent 1 Portrait</h3>
+                            <p class="text-xs text-slate-500">Clear, front-facing photo works best</p>
+                        </div>
+                    </div>
+                    <button id="clearParent1" type="button" class="hidden text-xs font-medium text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-2.5 py-1.5 rounded-lg transition items-center gap-1">
+                        <i class="ph-bold ph-trash"></i> Remove
+                    </button>
                 </div>
-            </figure>      
 
-            <div class="divider">
-                <i class="fas fa-heart"></i>
+                <div id="dropZone1" role="button" tabindex="0" aria-label="Upload Parent 1 portrait" class="drop-zone relative flex-1 min-h-[260px] sm:min-h-[300px] border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl bg-slate-50/70 transition-all flex flex-col items-center justify-center p-4 cursor-pointer overflow-hidden group">
+                    <input type="file" id="fileInput1" accept="image/*" class="hidden" />
+
+                    <div id="placeholder1" class="text-center p-4 flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center text-brand-600 mb-3 group-hover:scale-105 transition-transform">
+                            <i class="ph-duotone ph-user-focus text-3xl"></i>
+                        </div>
+                        <p class="font-semibold text-slate-700 text-sm sm:text-base mb-1">Click to upload or drag & drop</p>
+                        <p class="text-xs text-slate-400">JPG, PNG, or WEBP (automatically optimized)</p>
+                    </div>
+
+                    <div id="previewContainer1" class="hidden absolute inset-0 w-full h-full bg-slate-900">
+                        <img id="previewImg1" src="" alt="Parent 1 Preview" class="w-full h-full object-cover" />
+                        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent p-3 flex items-center justify-between text-white">
+                            <span class="text-xs font-medium flex items-center gap-1.5">
+                                <i class="ph-fill ph-check-circle text-emerald-400 text-base"></i> Ready for analysis
+                            </span>
+                            <span class="text-xs bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-lg">Change Photo</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <article class="letter animate-fade-in" id="story">
-                <h2>Why Old Main?</h2>
-                
-                <p>Dear Family & Friends,</p>
-
-                <p>Welcome to the lawn of the building known as Old Main on the campus of Arizona State University. Old Main, now a preserved historical building, was designed by W.A. McGinnis, and it is the oldest building on campus. The construction started in 1894, twenty years before Arizona became a state and one year after Geronimo surrendered. This building was the first in Tempe to be wired for electricity. The 2nd and 3rd floors were classrooms, and the lower level was the library. When the library opened, it had a collection of two items: a dictionary and a terrestrial globe.</p>
-
-                <p>Our family is in the architecture business, so I have to point out that this structure is made of three stories of tall brick, including a full basement set on a granite base. Its design is primarily Queen Anne, but it shows the influence of the Romanesque style. Note the projecting gabled pressed metal roof with a castellated cresting and metal ridge finials. The stairway is red sandstone. On the north side of the building, where you are sitting, you can see two projecting gables. The windows and doors have stone lintels, the upper-level windows on the north side have circular arches, and those on the south side have segmented windows.</p>
-
-                <p>In March of 1885, exactly 140 years ago, Arizona State University was established as the Territorial Normal School of Tempe. The 13th AZ legislature passed an act to create a normal school to train teachers for the Arizona Territory. Tuition was waived for any student willing to sign a contract to teach at an Arizona school. The school has gone through several name changes over the years: Arizona Territorial Normal School, Arizona Normal School, Normal School of Arizona, Tempe Normal School, and eventually Arizona State University.</p>
-
-                <p>It took twenty-two weeks to graduate with a teaching certificate. The enrollment standards were to be at least sixteen years of age and have a high school diploma. Tuition was $4 a month unless you promised to teach for a reasonable amount of time after graduation. In 1887, the first graduating class had five students, one of which was James McClintock. McClintock fell short of his agreement to teach. He taught for three years and then quit to go into the newspaper business. You will recognize that McClintock Drive, McClintock High School, and McClintock Hall were named after him.</p>
-
-                <p>When the school was founded, most students got to campus by horse, and the road directly behind us was the dirt path that brought them here, now known as University Drive. Students had to be careful when walking around all this commotion; today, it is no different. It was common for students on horseback to race up and down 8th Street, just to the east of this location.</p>
-
-                <p>The Arizona Territory was known as a brutal place, and it was thought it had no chance of becoming a state. Building a structure like Old Main was part of the plan to see Arizona as something other than the Wild West. The school liked to promote the fountain to show they had water and that it was safe to send your kids there.</p>
-
-                <p>On March 20, 1911 (113 years ago), President Theodore Roosevelt stood at the top of the stairs and dedicated Roosevelt Dam 60 miles Northeast of the Salt River Valley. The hope was that the dam would bring irrigation to farmers and as many as 100,000 people would live in the valley. Today, more students currently attend ASU alone (around 150,000), and the population of the greater Phoenix metropolitan area is now 4,845,832 people. Roosevelt spoke of the importance of an educated citizenry and showed examples like the school and the dam as signs that the gunfights and massacres of the territory were in the past.</p>
-
-                <p>While Old Main is a magnificent structure, the fountain deserves its own recognition. The story of the fountain begins with Emry Kopta from Austria. His father was a concert violinist, and his family was traveling with him to the U.S. They decided to move to San Francisco when Emry was 16. He was injured when a carriage overturned, and he had a permanent limp; therefore, he needed work that would allow him to sit all day. In 1906, he moved to France to study sculpting at the Sorbonne in Paris. In 1911, he moved to Los Angeles, where he met a young artist from AZ, Lon Megargee. Megargee went on to become a famous Southwestern painter.</p>
-
-                <p>In 1912, Kopta and Magargee were guests of John Lorenzo Hubbell at his trading post on the Navajo Reservation in Arizona. Artist William Leigh joined them, and the three men went to the Hopi Village of Polacca in Northern AZ to learn more about the American Indian and Hopi ceremonies. Here, Kopta met Tom Pavatea, a Hopi man who owned a trading post. Kopta fell in love with the Hopi people and moved to Polacca. He was adopted as a son by the Pavatea family. During his time on the reservation, he took photographs of daily life, ceremonies, and native people as studies for his sculptures.</p>
-
-                <p>He was commissioned to design the original fountain, including a bronze statue of a Hopi flute player atop a pedestal featuring Hopi Kachina designs. Before the statue could be cast, the College Board informed Kopta that it would no longer be included in the design due to lack of funds. The pedestal became the fountain that it is today, and the flute player model was donated to the ASU Art Museum. If you are interested in Kopta's work, you can find it at the Museum of Northern Arizona. The Native American influences and the original plan for the fountain are still meaningful to the Hopi tribe.</p>
-
-                <p>Taylor had a Native American English professor during her freshman year who brought them to the fountain for class and told them to get in and experience the mystical powers. He wanted them to write about how it made them feel; the answer was peaceful and brighter. If you get into the fountain, you will pay your respects to Kopta's legacy and how he attempted to honor the Hopi tribe. To this day, this professor still has his students climb into the fountain. I do not know if you will see any of the bridal party splash around in the fountain today, but if you do, just know it's to touch a bit of the fountain's magical properties and celebrate a big achievement -- like graduating -- which is an honored tradition.</p>
-
-                <h2>So ... why a marriage ceremony at Old Main?</h2>
-
-                <p>Besides it being super cool ...</p>
-
-                <p>One of the traits that Taylor and Ryan appreciate in each other is their love of learning and education. Their inner intellectuals found each other, and on their third date, they had lunch at the Postino Annex on the other side of University Drive and walked over here on a hot summer's day to see the fountain and Old Main. Much of their conversation on this date centered on their goals for the future: Ryan dreamed of attending law school, and Taylor was working full-time while completing her MBA.</p>
-
-                <p>Since that day, Ryan has been attending ASU's Sandra Day O'Connor School of Law, and Taylor has completed her MBA, now dreaming up her next big adventure. They had no idea at the time that two-and-a-half years later, this would be the spot where they would marry.</p>
-
-                <p>Fun fact: Eight people here today are ASU Sun Devils.</p>
-
-                <p>Old Main stands as a timeless witness to the journey of Taylor and Ryan---a steadfast symbol of their past, present, and future. Today, we are gathered here to embrace this moment where their love is celebrated and shared with you, and in the days to come, Old Main will remain a reminder of where their story began and where it will continue to unfold.</p>
-
-                <p>If you are the type of person who pays attention to details, you will see signs of personal and meaningful touches throughout the day. From the moment they were engaged, they knew they wanted to share the important places, people, and passions of their lives with you throughout this journey to "I do." Taylor's artistic interests were shared with you in the Save the Date video and other videos to come; this is the place where she studied that skill. Ryan's personal touches will be apparent shortly. If you look around, you will meet the people who mean everything to them. Their fourth date was at Spinatos, where we will soon join as a united family and celebrate them as a married couple.</p>
-
-                <p>Thank you for sharing this intentional & special day in this magical, historical place.</p>
-
-                <div class="signature">
-                    Forks up,<br><br>
-                    Cathy Falls<br>
-                    Mother of the Bride
+            <!-- Parent 2 Card -->
+            <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/90 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-8 h-8 rounded-full bg-pink-100 text-pink-700 font-display font-bold text-sm flex items-center justify-center">2</span>
+                        <div>
+                            <h3 class="font-display font-bold text-slate-900 text-base">Parent 2 Portrait</h3>
+                            <p class="text-xs text-slate-500">Clear, front-facing photo works best</p>
+                        </div>
+                    </div>
+                    <button id="clearParent2" type="button" class="hidden text-xs font-medium text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-2.5 py-1.5 rounded-lg transition items-center gap-1">
+                        <i class="ph-bold ph-trash"></i> Remove
+                    </button>
                 </div>
-            </article>
 
-            <div class="divider">
-                <i class="fas fa-heart"></i>
+                <div id="dropZone2" role="button" tabindex="0" aria-label="Upload Parent 2 portrait" class="drop-zone relative flex-1 min-h-[260px] sm:min-h-[300px] border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl bg-slate-50/70 transition-all flex flex-col items-center justify-center p-4 cursor-pointer overflow-hidden group">
+                    <input type="file" id="fileInput2" accept="image/*" class="hidden" />
+
+                    <div id="placeholder2" class="text-center p-4 flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center text-pink-600 mb-3 group-hover:scale-105 transition-transform">
+                            <i class="ph-duotone ph-user-focus text-3xl"></i>
+                        </div>
+                        <p class="font-semibold text-slate-700 text-sm sm:text-base mb-1">Click to upload or drag & drop</p>
+                        <p class="text-xs text-slate-400">JPG, PNG, or WEBP (automatically optimized)</p>
+                    </div>
+
+                    <div id="previewContainer2" class="hidden absolute inset-0 w-full h-full bg-slate-900">
+                        <img id="previewImg2" src="" alt="Parent 2 Preview" class="w-full h-full object-cover" />
+                        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent p-3 flex items-center justify-between text-white">
+                            <span class="text-xs font-medium flex items-center gap-1.5">
+                                <i class="ph-fill ph-check-circle text-emerald-400 text-base"></i> Ready for analysis
+                            </span>
+                            <span class="text-xs bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-lg">Change Photo</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <section class="gallery" id="gallery" aria-label="Photo gallery">
-            <figure class="image-container animate-fade-in">
-                <img src="https://i.imgur.com/wpNMzlf.jpg" alt="Taylor ASU Graduation" loading="lazy" data-full="https://i.imgur.com/wpNMzlf.jpg"/>
-            </figure>
-            <figure class="image-container animate-fade-in">
-                <img src="https://i.imgur.com/jqbyVdc.jpg" alt="Old Main 1" loading="lazy" data-full="https://i.imgur.com/jqbyVdc.jpg"/>
-            </figure>
-            <figure class="image-container animate-fade-in">
-                <img src="https://i.imgur.com/mxGprKv.jpg" alt="Old Main 2" loading="lazy" data-full="https://i.imgur.com/mxGprKv.jpg"/>
-            </figure>
-            <figure class="image-container animate-fade-in">
-                <img src="https://i.imgur.com/ke0K4oW.jpg" alt="Ryan and Taylor at their first ASU Football Game" loading="lazy" data-full="https://i.imgur.com/ke0K4oW.jpg"/>
-            </figure>
         </section>
+
+        <!-- Step 2: Parameters, Consent & Action Button -->
+        <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/90 mb-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+
+                <!-- Age Stage Selector -->
+                <div class="lg:col-span-5">
+                    <span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5 flex items-center gap-1.5">
+                        <i class="ph-bold ph-hourglass-medium text-brand-600 text-sm"></i>
+                        Predicted Child Age Stage
+                    </span>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="ageSelectorGroup" role="group" aria-label="Predicted child age stage">
+                        <button type="button" aria-pressed="false" data-age="Toddler (2-3 years old)" class="age-btn px-3 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition flex flex-col items-center gap-1">
+                            <i class="ph-duotone ph-baby text-lg"></i>
+                            <span>Toddler</span>
+                            <span class="text-[10px] font-normal text-slate-400">2–3 yrs</span>
+                        </button>
+                        <button type="button" aria-pressed="true" data-age="Young Child (6-8 years old)" class="age-btn px-3 py-2.5 rounded-xl text-xs font-semibold border-2 border-brand-600 bg-brand-50 text-brand-700 transition flex flex-col items-center gap-1">
+                            <i class="ph-duotone ph-smiley text-lg"></i>
+                            <span>Child</span>
+                            <span class="text-[10px] font-normal text-brand-500">6–8 yrs</span>
+                        </button>
+                        <button type="button" aria-pressed="false" data-age="Pre-Teen (11-13 years old)" class="age-btn px-3 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition flex flex-col items-center gap-1">
+                            <i class="ph-duotone ph-student text-lg"></i>
+                            <span>Pre-Teen</span>
+                            <span class="text-[10px] font-normal text-slate-400">11–13 yrs</span>
+                        </button>
+                        <button type="button" aria-pressed="false" data-age="Teenager (16-18 years old)" class="age-btn px-3 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition flex flex-col items-center gap-1">
+                            <i class="ph-duotone ph-user text-lg"></i>
+                            <span>Teenager</span>
+                            <span class="text-[10px] font-normal text-slate-400">16–18 yrs</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gender / Presentation Selector -->
+                <div class="lg:col-span-4">
+                    <span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5 flex items-center gap-1.5">
+                        <i class="ph-bold ph-sparkle text-brand-600 text-sm"></i>
+                        Presentation
+                    </span>
+                    <div class="grid grid-cols-3 gap-2" id="genderSelectorGroup" role="group" aria-label="Child presentation">
+                        <!-- FIX: value no longer says "Surprise ... expression", which could make the model render a surprised face -->
+                        <button type="button" aria-pressed="true" data-gender="Unspecified (model's choice)" class="gender-btn px-3 py-2.5 rounded-xl text-xs font-semibold border-2 border-brand-600 bg-brand-50 text-brand-700 transition flex flex-col items-center gap-1">
+                            <i class="ph-duotone ph-shooting-star text-lg"></i>
+                            <span>Surprise</span>
+                            <span class="text-[10px] font-normal text-brand-500">Balanced</span>
+                        </button>
+                        <button type="button" aria-pressed="false" data-gender="Boy / Masculine presentation" class="gender-btn px-3 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition flex flex-col items-center gap-1">
+                            <i class="ph-duotone ph-gender-male text-lg"></i>
+                            <span>Boy</span>
+                            <span class="text-[10px] font-normal text-slate-400">Masculine</span>
+                        </button>
+                        <button type="button" aria-pressed="false" data-gender="Girl / Feminine presentation" class="gender-btn px-3 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition flex flex-col items-center gap-1">
+                            <i class="ph-duotone ph-gender-female text-lg"></i>
+                            <span>Girl</span>
+                            <span class="text-[10px] font-normal text-slate-400">Feminine</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Analyze & Generate CTA -->
+                <div class="lg:col-span-3 flex flex-col justify-end h-full pt-2 lg:pt-5">
+                    <button id="analyzeBtn" type="button" class="w-full py-4 px-5 rounded-2xl dna-loader text-white font-display font-bold text-sm sm:text-base shadow-lg shadow-brand-500/25 hover:opacity-95 active:scale-[0.99] transition flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="ph-bold ph-dna text-xl"></i>
+                        <span>Analyze & Predict</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- NEW: Consent & privacy notice -->
+            <div class="mt-6 pt-5 border-t border-slate-200/80">
+                <div class="mb-4 max-w-sm">
+                    <label for="accessCode" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Access Code</label>
+                    <input id="accessCode" type="password" autocomplete="off" placeholder="Enter the access code you were given" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+                <label class="flex items-start gap-3 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                    <input id="consentCheck" type="checkbox" class="mt-0.5 w-4 h-4 accent-brand-600 shrink-0" />
+                    <span>
+                        I confirm that I am 18 or older, that I have permission from each person pictured to upload their photo, and that I understand these images are sent to a third-party AI provider (Google) for analysis, and a text description derived from them is sent to an image-generation service. <span class="text-slate-500">Photos are processed in your browser and are not stored by this page; check your backend's retention settings before publishing.</span>
+                    </span>
+                </label>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <section id="loadingSection" class="hidden max-w-3xl mx-auto my-12 bg-white rounded-3xl p-8 shadow-md border border-brand-100 text-center">
+            <div class="w-16 h-16 mx-auto mb-5 rounded-2xl dna-loader flex items-center justify-center text-white shadow-lg">
+                <i id="loadingIcon" class="ph-bold ph-spinner-gap animate-spin text-3xl"></i>
+            </div>
+            <h3 id="loadingTitle" class="font-display font-bold text-xl text-slate-900 mb-2">
+                Analyzing Parental Traits...
+            </h3>
+            <p id="loadingSubtitle" class="text-sm text-slate-500 max-w-md mx-auto mb-6">
+                Gemini Vision is examining facial features, hair structure, and inheritance patterns.
+            </p>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden max-w-md mx-auto mb-4">
+                <div id="loadingBar" class="dna-loader h-full w-1/3 transition-all duration-700 rounded-full"></div>
+            </div>
+            <!-- FIX: two indicators to match the two real stages (was 3 indicators vs "Step 1/2") -->
+            <div class="flex justify-center gap-6 text-xs font-medium text-slate-400">
+                <span id="stepIndicator1" class="flex items-center gap-1">
+                    <i class="ph-bold ph-circle-dashed"></i> 1. Trait Analysis
+                </span>
+                <span id="stepIndicator2" class="flex items-center gap-1">
+                    <i class="ph-bold ph-circle-dashed"></i> 2. Portrait Synthesis
+                </span>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="hidden space-y-8">
+
+            <!-- NEW: prominent disclaimer -->
+            <div class="max-w-4xl mx-auto p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-3">
+                <i class="ph-fill ph-warning-circle text-xl shrink-0 mt-0.5 text-amber-600"></i>
+                <p><strong>For entertainment only.</strong> The traits, percentages, and portrait below are AI-generated illustrations, not genetic calculations or medical predictions. Real inheritance involves thousands of genes and is not predictable from photos. The portrait is built from a text description, so it may not resemble either parent.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                <!-- Left Column: Portrait -->
+                <div class="lg:col-span-5 bg-white rounded-3xl p-5 sm:p-6 shadow-md border border-slate-200/90 lg:sticky lg:top-24">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">Predicted Offspring</span>
+                            <h3 class="font-display font-extrabold text-xl text-slate-900 mt-1" id="portraitHeaderTitle">Future Child Portrait</h3>
+                        </div>
+                        <button id="downloadPortraitBtn" type="button" aria-label="Download portrait" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="Download Portrait">
+                            <i class="ph-bold ph-download-simple text-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200 mb-4 flex items-center justify-center">
+                        <img id="offspringImage" src="" alt="Predicted Future Offspring" class="w-full h-full object-cover transition-opacity duration-500" />
+
+                        <div id="imageRegenLoader" class="hidden absolute inset-0 bg-slate-900/75 backdrop-blur-sm flex flex-col items-center justify-center text-white p-6 text-center">
+                            <i class="ph-bold ph-spinner-gap animate-spin text-4xl text-brand-400 mb-3"></i>
+                            <p class="font-display font-bold text-base">Synthesizing New Variation...</p>
+                            <p class="text-xs text-slate-300 mt-1">Generating another portrait from the same trait description</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-200/80 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <img id="miniParent1" src="" alt="Parent 1" class="w-10 h-10 rounded-xl object-cover border border-indigo-200 shadow-sm" />
+                            <span class="text-xs font-semibold text-slate-600">Parent 1</span>
+                        </div>
+                        <div class="text-brand-500 flex items-center gap-1 text-xs font-bold">
+                            <i class="ph-bold ph-plus"></i>
+                            <i class="ph-bold ph-dna text-base"></i>
+                            <i class="ph-bold ph-arrow-right"></i>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xs font-semibold text-slate-600">Parent 2</span>
+                            <img id="miniParent2" src="" alt="Parent 2" class="w-10 h-10 rounded-xl object-cover border border-pink-200 shadow-sm" />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-2.5">
+                        <button id="regenerateImageBtn" type="button" class="flex-1 py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="ph-bold ph-arrows-clockwise text-base"></i>
+                            <span>Try Another Variation</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Trait Breakdown -->
+                <div class="lg:col-span-7 space-y-6">
+
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/90">
+                        <div class="flex items-center gap-2.5 mb-3">
+                            <div class="w-9 h-9 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center">
+                                <i class="ph-bold ph-microscope text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-lg text-slate-900">Morphological Inheritance Summary</h3>
+                                <p class="text-xs text-slate-500">Illustrative phenotypic blend projection</p>
+                            </div>
+                        </div>
+                        <p id="geneticSummaryText" class="text-slate-700 text-sm leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200/60"></p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-3 px-1">
+                            <h4 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
+                                <!-- FIX: icon class is lowercase -->
+                                <i class="ph-fill ph-sliders-horizontal text-brand-600"></i>
+                                Feature-by-Feature Trait Breakdown
+                            </h4>
+                            <span class="text-xs text-slate-500">Illustrative estimates</span>
+                        </div>
+                        <div id="traitsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                    </div>
+
+                    <div class="bg-slate-900 text-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-300 flex items-center gap-1.5">
+                                <i class="ph-bold ph-sparkle"></i> AI Portrait Synthesis Prompt
+                            </span>
+                            <button id="copyPromptBtn" type="button" class="text-xs text-slate-300 hover:text-white bg-white/10 px-2.5 py-1 rounded-lg transition flex items-center gap-1">
+                                <i class="ph-bold ph-copy"></i> Copy Prompt
+                            </button>
+                        </div>
+                        <p id="visualPromptText" class="text-xs text-slate-300 font-mono leading-relaxed"></p>
+                        <div class="mt-4 pt-3 border-t border-slate-800 flex items-center gap-2 text-[11px] text-slate-400">
+                            <i class="ph-fill ph-info text-brand-400 text-sm shrink-0"></i>
+                            <span>Note: Real-world human genetics involves thousands of polygenic loci and environmental factors. This breakdown is for educational and entertainment purposes only.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="footer animate-fade-in">
-        <div class="container">
-            <p>We look forward to celebrating with you.</p>
-            <p>Taylor & Ryan</p>
-            <p class="mt-4 text-sm">March 8th, 2025 • Old Main, ASU</p>
-        </div>
-    </footer>
-
-    <!-- Modal for image viewing -->
-    <div class="modal" id="image-modal" role="dialog" aria-modal="true" aria-hidden="true">
-        <span class="close-modal" id="close-modal" aria-label="Close image">&times;</span>
-        <img class="modal-content" id="modal-image" alt="Enlarged wedding photo"/>
-    </div>
-
-    <!-- Back to top button -->
-    <button class="back-to-top" id="back-to-top" aria-label="Back to top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+    <canvas id="helperCanvas" class="hidden"></canvas>
 
     <script>
-        // Wait for all content to load
-        window.addEventListener('load', () => {
-            // Hide loading screen
-            document.querySelector('.loading').classList.add('hidden');
-            
-            // Initialize animations
-            initAnimations();
-            
-            // Setup countdown timer
-            initCountdown();
-            
-            // Setup navigation
-            initNavigation();
-            
-            // Setup gallery
-            initGallery();
-            
-            // Setup back to top button
-            initBackToTop();
-            
-            // Setup seating chart zoom
-            initSeatingZoom();
-        });
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+        // No API key lives in this page. All calls go through your Cloudflare Worker,
+        // which holds the secrets and checks the access code.
+        const WORKER_BASE = "https://kinmorph-proxy.ryan-mcguire.workers.dev";
+        const ANALYZE_URL = `${WORKER_BASE}/analyze`;
+        const GENERATE_URL = `${WORKER_BASE}/generate`;
 
-        function initAnimations() {
-            const observerOptions = {
-                threshold: 0.15,
-                rootMargin: '0px 0px -50px 0px'
-            };
+        const MAX_UPLOAD_BYTES = 15 * 1024 * 1024; // 15 MB pre-resize limit
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-fade-in');
-                        observer.unobserve(entry.target); // Stop observing once animated
-                    }
-                });
-            }, observerOptions);
+        // ==========================================
+        // STATE
+        // ==========================================
+        const appState = {
+            parent1: null,
+            parent2: null,
+            selectedAge: "Young Child (6-8 years old)",
+            selectedGender: "Unspecified (model's choice)",
+            lastAnalysis: null,
+            variationCount: 0
+        };
 
-            document.querySelectorAll('.animate-fade-in').forEach((element) => {
-                observer.observe(element);
-            });
-        }
+        // ==========================================
+        // DOM ELEMENTS
+        // ==========================================
+        const $ = (id) => document.getElementById(id);
 
-        function initCountdown() {
-            // Updated time to 4:30 PM (16:30:00) with Phoenix timezone (MST/UTC-7)
-            const weddingDate = new Date('March 8, 2025 16:30:00 MST').getTime();
-            const countdownEl = document.getElementById('countdown');
-    
-            function updateCountdown() {
-                const now = new Date().getTime();
-                const distance = weddingDate - now;
-        
-                if (distance < 0) {
-                    countdownEl.innerHTML = "Today is the day!";
-                    return;
-                }
-        
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        
-                countdownEl.innerHTML = `${days} days, ${hours} hours, ${minutes} minutes until we say "I do"`;
+        const dropZone1 = $('dropZone1');
+        const dropZone2 = $('dropZone2');
+        const fileInput1 = $('fileInput1');
+        const fileInput2 = $('fileInput2');
+        const previewContainer1 = $('previewContainer1');
+        const previewContainer2 = $('previewContainer2');
+        const previewImg1 = $('previewImg1');
+        const previewImg2 = $('previewImg2');
+        const placeholder1 = $('placeholder1');
+        const placeholder2 = $('placeholder2');
+        const clearParent1 = $('clearParent1');
+        const clearParent2 = $('clearParent2');
+        const consentCheck = $('consentCheck');
+        const accessCodeInput = $('accessCode');
+
+        const analyzeBtn = $('analyzeBtn');
+        const demoBtn = $('demoBtn');
+        const loadingSection = $('loadingSection');
+        const loadingTitle = $('loadingTitle');
+        const loadingSubtitle = $('loadingSubtitle');
+        const loadingBar = $('loadingBar');
+        const stepIndicator1 = $('stepIndicator1');
+        const stepIndicator2 = $('stepIndicator2');
+
+        const resultsSection = $('resultsSection');
+        const offspringImage = $('offspringImage');
+        const imageRegenLoader = $('imageRegenLoader');
+        const geneticSummaryText = $('geneticSummaryText');
+        const traitsGrid = $('traitsGrid');
+        const visualPromptText = $('visualPromptText');
+        const regenerateImageBtn = $('regenerateImageBtn');
+        const downloadPortraitBtn = $('downloadPortraitBtn');
+        const copyPromptBtn = $('copyPromptBtn');
+
+        // ==========================================
+        // HELPERS
+        // ==========================================
+        // FIX: escape model output before inserting into innerHTML (XSS / prompt-injection defense)
+        const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => (
+            { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+        ));
+
+        function showMessage(title, message, type = 'warning') {
+            const alertBox = $('statusAlert');
+            const alertIcon = $('statusAlertIcon');
+
+            alertBox.className = 'max-w-3xl mx-auto mb-6 p-4 rounded-2xl border flex items-start gap-3 shadow-sm transition-all';
+            if (type === 'error') {
+                alertBox.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+                alertIcon.className = 'ph-fill ph-warning-octagon text-xl shrink-0 mt-0.5 text-rose-600';
+            } else if (type === 'success') {
+                alertBox.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+                alertIcon.className = 'ph-fill ph-check-circle text-xl shrink-0 mt-0.5 text-emerald-600';
+            } else {
+                alertBox.classList.add('bg-amber-50', 'border-amber-200', 'text-amber-900');
+                alertIcon.className = 'ph-fill ph-warning-circle text-xl shrink-0 mt-0.5 text-amber-600';
             }
-    
-            updateCountdown();
-            setInterval(updateCountdown, 60000); // Update every minute
+
+            $('statusAlertTitle').textContent = title;
+            $('statusAlertMessage').textContent = message;
+            alertBox.classList.remove('hidden');
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        function initNavigation() {
-            let lastScrollY = window.scrollY;
-            const nav = document.querySelector('.nav');
-            
-            // Show/hide navigation based on scroll direction
-            window.addEventListener('scroll', () => {
-                const scrollY = window.scrollY;
-                const isScrollingDown = scrollY > lastScrollY;
-                
-                // Show nav when scrolling past header
-                if (scrollY > 100) {
-                    nav.classList.add('visible');
-                } else {
-                    nav.classList.remove('visible');
-                }
-                
-                lastScrollY = scrollY;
-            });
-            
-            // Smooth scroll for navigation links
-            document.querySelectorAll('.nav a').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
+        function workerHeaders() {
+            return { 'Content-Type': 'application/json', 'X-Access-Code': accessCodeInput.value.trim() };
         }
 
-        function initGallery() {
-            const modal = document.getElementById('image-modal');
-            const modalImg = document.getElementById('modal-image');
-            const closeBtn = document.getElementById('close-modal');
-            
-            // Open modal when clicking on gallery images
-            document.querySelectorAll('.gallery .image-container img').forEach(img => {
-                img.addEventListener('click', function() {
-                    modal.classList.add('open');
-                    modalImg.src = this.getAttribute('data-full') || this.src;
-                    modalImg.alt = this.alt;
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-                });
-                
-                // Make gallery images keyboard accessible
-                img.parentElement.setAttribute('tabindex', '0');
-                img.parentElement.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        img.click();
-                    }
-                });
-            });
-            
-            // Close modal
-            closeBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            });
-            
-            // Close modal with escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && modal.classList.contains('open')) {
-                    closeModal();
-                }
-            });
-            
-            function closeModal() {
-                modal.classList.remove('open');
-                document.body.style.overflow = ''; // Restore scrolling
-            }
+        function hideMessage() {
+            $('statusAlert').classList.add('hidden');
         }
+        $('alertCloseBtn').addEventListener('click', hideMessage);
 
-        function initBackToTop() {
-            const backToTopBtn = document.getElementById('back-to-top');
-            
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 500) {
-                    backToTopBtn.classList.add('visible');
-                } else {
-                    backToTopBtn.classList.remove('visible');
-                }
-            });
-            
-            backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-        }
+        // ==========================================
+        // IMAGE UPLOAD & OPTIMIZATION
+        // ==========================================
+        function setupUploadZone(zoneEl, inputEl, parentNum) {
+            zoneEl.addEventListener('click', () => inputEl.click());
 
-        function initSeatingZoom() {
-            const seatingInfo = document.getElementById('seating-info');
-            const modal = document.getElementById('image-modal');
-            const modalImg = document.getElementById('modal-image');
-            
-            seatingInfo.addEventListener('click', function() {
-                const seatingChart = this.closest('.seating-chart').querySelector('img');
-                modal.classList.add('open');
-                modalImg.src = seatingChart.src;
-                modalImg.alt = seatingChart.alt;
-                document.body.style.overflow = 'hidden';
-            });
-            
-            // Make seating info keyboard accessible
-            seatingInfo.addEventListener('keydown', function(e) {
+            // FIX: the hidden input lives inside the zone, so its synthetic click bubbled back up
+            // and re-triggered the zone handler. Stop that bubbling.
+            inputEl.addEventListener('click', (e) => e.stopPropagation());
+
+            // FIX: keyboard accessibility
+            zoneEl.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    this.click();
+                    inputEl.click();
+                }
+            });
+
+            zoneEl.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zoneEl.classList.add('drop-zone-active');
+            });
+
+            zoneEl.addEventListener('dragleave', () => {
+                zoneEl.classList.remove('drop-zone-active');
+            });
+
+            zoneEl.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zoneEl.classList.remove('drop-zone-active');
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    processUploadedFile(e.dataTransfer.files[0], parentNum);
+                }
+            });
+
+            inputEl.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    processUploadedFile(e.target.files[0], parentNum);
                 }
             });
         }
+
+        function processUploadedFile(file, parentNum) {
+            if (!file.type.startsWith('image/')) {
+                showMessage('Invalid File Format', 'Please upload an image file (JPG, PNG, or WEBP).', 'error');
+                return;
+            }
+            if (file.size > MAX_UPLOAD_BYTES) {
+                showMessage('File Too Large', 'Please choose an image under 15 MB.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onerror = () => showMessage('Upload Failed', 'The image could not be read. Please try another file.', 'error');
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onerror = () => showMessage('Unsupported Image', 'That file could not be decoded as an image. Try a JPG or PNG.', 'error');
+                img.onload = () => {
+                    const canvas = $('helperCanvas');
+                    const maxDim = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height && width > maxDim) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else if (height > maxDim) {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    // FIX: fill white first so transparent PNGs don't turn black when converted to JPEG
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+                    setParentImage(parentNum, {
+                        base64: dataUrl.split(',')[1],
+                        mimeType: 'image/jpeg',
+                        dataUrl
+                    });
+                    hideMessage();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setParentImage(parentNum, imageData) {
+            if (parentNum === 1) {
+                appState.parent1 = imageData;
+                previewImg1.src = imageData.dataUrl;
+                previewContainer1.classList.remove('hidden');
+                placeholder1.classList.add('hidden');
+                clearParent1.classList.remove('hidden');
+                clearParent1.classList.add('flex');
+            } else {
+                appState.parent2 = imageData;
+                previewImg2.src = imageData.dataUrl;
+                previewContainer2.classList.remove('hidden');
+                placeholder2.classList.add('hidden');
+                clearParent2.classList.remove('hidden');
+                clearParent2.classList.add('flex');
+            }
+        }
+
+        clearParent1.addEventListener('click', (e) => {
+            e.stopPropagation();
+            appState.parent1 = null;
+            fileInput1.value = '';
+            previewContainer1.classList.add('hidden');
+            placeholder1.classList.remove('hidden');
+            clearParent1.classList.add('hidden');
+            clearParent1.classList.remove('flex');
+        });
+
+        clearParent2.addEventListener('click', (e) => {
+            e.stopPropagation();
+            appState.parent2 = null;
+            fileInput2.value = '';
+            previewContainer2.classList.add('hidden');
+            placeholder2.classList.remove('hidden');
+            clearParent2.classList.add('hidden');
+            clearParent2.classList.remove('flex');
+        });
+
+        setupUploadZone(dropZone1, fileInput1, 1);
+        setupUploadZone(dropZone2, fileInput2, 2);
+
+        // ==========================================
+        // OPTION SELECTORS (AGE & PRESENTATION)
+        // ==========================================
+        const BTN_INACTIVE = 'px-3 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition flex flex-col items-center gap-1';
+        const BTN_ACTIVE = 'px-3 py-2.5 rounded-xl text-xs font-semibold border-2 border-brand-600 bg-brand-50 text-brand-700 transition flex flex-col items-center gap-1';
+
+        function wireSelector(selector, baseClass, dataAttr, stateKey) {
+            const buttons = document.querySelectorAll(selector);
+            buttons.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach((b) => {
+                        b.className = `${baseClass} ${BTN_INACTIVE}`;
+                        b.setAttribute('aria-pressed', 'false');
+                    });
+                    btn.className = `${baseClass} ${BTN_ACTIVE}`;
+                    btn.setAttribute('aria-pressed', 'true');
+                    appState[stateKey] = btn.getAttribute(dataAttr);
+                });
+            });
+        }
+        wireSelector('.age-btn', 'age-btn', 'data-age', 'selectedAge');
+        wireSelector('.gender-btn', 'gender-btn', 'data-gender', 'selectedGender');
+
+        // ==========================================
+        // SAMPLE PORTRAIT GENERATOR
+        // ==========================================
+        function createIllustratedSampleParent(type) {
+            const canvas = $('helperCanvas');
+            canvas.width = 600;
+            canvas.height = 600;
+            const ctx = canvas.getContext('2d');
+
+            if (type === 1) {
+                const grad = ctx.createLinearGradient(0, 0, 600, 600);
+                grad.addColorStop(0, '#e0e7ff');
+                grad.addColorStop(1, '#c7d2fe');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 600, 600);
+
+                ctx.fillStyle = '#312e81';
+                ctx.beginPath();
+                ctx.ellipse(300, 580, 210, 120, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#c68b59';
+                ctx.fillRect(255, 380, 90, 110);
+
+                ctx.fillStyle = '#1c1917';
+                for (let angle = 0; angle < Math.PI * 2; angle += 0.35) {
+                    const hx = 300 + Math.cos(angle) * 145;
+                    const hy = 230 + Math.sin(angle) * 145;
+                    ctx.beginPath();
+                    ctx.arc(hx, hy, 48, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.fillStyle = '#d49a6a';
+                ctx.beginPath();
+                ctx.ellipse(300, 275, 122, 152, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = '#1c1917';
+                ctx.lineWidth = 10;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(215, 225);
+                ctx.quadraticCurveTo(245, 212, 275, 222);
+                ctx.moveTo(325, 222);
+                ctx.quadraticCurveTo(355, 212, 385, 225);
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.ellipse(245, 252, 26, 14, 0, 0, Math.PI * 2);
+                ctx.ellipse(355, 252, 26, 14, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#451a03';
+                ctx.beginPath();
+                ctx.arc(245, 252, 11, 0, Math.PI * 2);
+                ctx.arc(355, 252, 11, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.arc(245, 252, 5, 0, Math.PI * 2);
+                ctx.arc(355, 252, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = '#a87045';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(300, 245);
+                ctx.lineTo(295, 312);
+                ctx.lineTo(312, 316);
+                ctx.stroke();
+
+                ctx.strokeStyle = '#8c3b2b';
+                ctx.lineWidth = 7;
+                ctx.beginPath();
+                ctx.arc(300, 335, 42, 0.15 * Math.PI, 0.85 * Math.PI);
+                ctx.stroke();
+
+                ctx.fillStyle = '#1c1917';
+                for (let x = 190; x <= 410; x += 42) {
+                    ctx.beginPath();
+                    ctx.arc(x, 140, 36, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            } else {
+                const grad = ctx.createLinearGradient(0, 0, 600, 600);
+                grad.addColorStop(0, '#fce7f3');
+                grad.addColorStop(1, '#fbcfe8');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 600, 600);
+
+                ctx.fillStyle = '#9a3412';
+                ctx.beginPath();
+                ctx.ellipse(300, 310, 165, 210, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#831843';
+                ctx.beginPath();
+                ctx.ellipse(300, 580, 195, 115, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#f5cba7';
+                ctx.fillRect(262, 380, 76, 110);
+
+                ctx.fillStyle = '#fadbd8';
+                ctx.beginPath();
+                ctx.ellipse(300, 275, 114, 146, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = '#7c2d12';
+                ctx.lineWidth = 6;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(218, 225);
+                ctx.quadraticCurveTo(245, 210, 272, 222);
+                ctx.moveTo(328, 222);
+                ctx.quadraticCurveTo(355, 210, 382, 225);
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.ellipse(245, 252, 25, 15, 0, 0, Math.PI * 2);
+                ctx.ellipse(355, 252, 25, 15, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#0d9488';
+                ctx.beginPath();
+                ctx.arc(245, 252, 11, 0, Math.PI * 2);
+                ctx.arc(355, 252, 11, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.arc(245, 252, 5, 0, Math.PI * 2);
+                ctx.arc(355, 252, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#d97706';
+                const freckles = [[225, 290], [240, 298], [255, 292], [295, 295], [308, 292], [345, 292], [360, 298], [372, 288]];
+                freckles.forEach(([fx, fy]) => {
+                    ctx.beginPath();
+                    ctx.arc(fx, fy, 2.2, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                ctx.strokeStyle = '#e59866';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(300, 248);
+                ctx.lineTo(297, 308);
+                ctx.lineTo(309, 312);
+                ctx.stroke();
+
+                ctx.strokeStyle = '#be123c';
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.arc(300, 332, 36, 0.15 * Math.PI, 0.85 * Math.PI);
+                ctx.stroke();
+
+                ctx.fillStyle = '#b45309';
+                ctx.beginPath();
+                ctx.moveTo(180, 200);
+                ctx.quadraticCurveTo(260, 110, 420, 195);
+                ctx.quadraticCurveTo(330, 165, 180, 200);
+                ctx.fill();
+            }
+
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+            return { base64: dataUrl.split(',')[1], mimeType: 'image/jpeg', dataUrl };
+        }
+
+        demoBtn.addEventListener('click', () => {
+            setParentImage(1, createIllustratedSampleParent(1));
+            setParentImage(2, createIllustratedSampleParent(2));
+            showMessage('Sample Portraits Loaded', 'Two sample parent portraits have been loaded. Confirm the consent box, then click "Analyze & Predict".', 'success');
+        });
+
+        // ==========================================
+        // FETCH WRAPPER WITH BACKOFF
+        // ==========================================
+        // FIX: previously the thrown 4xx error sat inside the try block, so the catch retried it.
+        // Now only network failures, 429, and 5xx are retried; other errors fail immediately.
+        async function fetchWithRetry(url, options, maxRetries = 3) {
+            let delay = 1000;
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                let response;
+                try {
+                    response = await fetch(url, options);
+                } catch (networkErr) {
+                    if (attempt === maxRetries) throw networkErr;
+                    await new Promise((r) => setTimeout(r, delay));
+                    delay *= 2;
+                    continue;
+                }
+
+                if (response.ok) return response;
+
+                const retryable = response.status === 429 || response.status >= 500;
+                if (retryable && attempt < maxRetries) {
+                    await new Promise((r) => setTimeout(r, delay));
+                    delay *= 2;
+                    continue;
+                }
+
+                const err = new Error(`API Error (${response.status}): ${await response.text()}`);
+                err.status = response.status;
+                throw err;
+            }
+        }
+
+        // ==========================================
+        // STAGE 1: MORPHOLOGICAL TRAIT ANALYSIS (via Worker -> Gemini)
+        // ==========================================
+        async function analyzeParentTraits() {
+            // The Worker builds the AI prompt itself; we only send the photos and two options.
+            let response;
+            try {
+                response = await fetchWithRetry(ANALYZE_URL, {
+                    method: 'POST',
+                    headers: workerHeaders(),
+                    body: JSON.stringify({
+                        parent1: appState.parent1.base64,
+                        parent2: appState.parent2.base64,
+                        age: appState.selectedAge,
+                        presentation: appState.selectedGender
+                    })
+                });
+            } catch (e) {
+                if (e.status === 422) e.policy = true;
+                throw e;
+            }
+            return await response.json();
+        }
+
+        // ==========================================
+        // STAGE 2: PORTRAIT GENERATION (via Worker)
+        // ==========================================
+        async function generateOffspringPortrait(visualPrompt, variationIndex = 0) {
+            const variationModifiers = [
+                "Warm natural studio lighting, shallow depth of field, 85mm lens, lifelike skin texture, photorealistic child photography.",
+                "Soft golden hour lighting, candid joyful expression, detailed facial features, realistic natural portrait.",
+                "Classic editorial close-up studio portrait, balanced softbox lighting, expressive eyes, crisp focus, authentic photography."
+            ];
+            const modifier = variationModifiers[variationIndex % variationModifiers.length];
+            const fullPrompt = `Photorealistic close-up portrait of a single child (${appState.selectedAge}, ${appState.selectedGender}): ${visualPrompt}. ${modifier}`;
+
+            const response = await fetchWithRetry(GENERATE_URL, {
+                method: "POST",
+                headers: workerHeaders(),
+                body: JSON.stringify({ prompt: fullPrompt })
+            }).catch((e) => { if (e.status === 422) e.policy = true; throw e; });
+
+            const blob = await response.blob();
+            if (!blob.type.startsWith('image/')) {
+                // Worker returned JSON/text (e.g., a safety refusal) with a 200 status
+                const err = new Error('The image service did not return an image.');
+                err.policy = true;
+                throw err;
+            }
+
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        // ==========================================
+        // RENDERING
+        // ==========================================
+        function getCategoryIcon(category) {
+            const lower = String(category).toLowerCase();
+            if (lower.includes('eye')) return 'ph-eye';
+            if (lower.includes('hair')) return 'ph-waves';
+            if (lower.includes('nose')) return 'ph-smiley-wink';
+            if (lower.includes('skin') || lower.includes('complexion')) return 'ph-sun-dim';
+            if (lower.includes('smile') || lower.includes('lip') || lower.includes('dimple')) return 'ph-smiley';
+            return 'ph-user-focus';
+        }
+
+        function getBadgeStyle(pattern) {
+            const lower = String(pattern).toLowerCase();
+            if (lower.includes('dominant')) return 'bg-purple-100 text-purple-800 border-purple-200';
+            if (lower.includes('recessive')) return 'bg-amber-100 text-amber-800 border-amber-200';
+            return 'bg-teal-100 text-teal-800 border-teal-200';
+        }
+
+        function renderAnalysisResults(analysis, portraitDataUrl) {
+            $('miniParent1').src = appState.parent1.dataUrl;
+            $('miniParent2').src = appState.parent2.dataUrl;
+
+            offspringImage.src = portraitDataUrl;
+            $('portraitHeaderTitle').textContent = `Predicted ${appState.selectedAge.split(' (')[0]}`;
+
+            geneticSummaryText.textContent = analysis.geneticSummary;
+            visualPromptText.textContent = analysis.offspringVisualPrompt;
+
+            traitsGrid.innerHTML = '';
+            (analysis.traits || []).forEach((trait) => {
+                const iconClass = getCategoryIcon(trait.category);
+                const badgeClass = getBadgeStyle(trait.inheritancePattern);
+                // FIX: clamp now matches the 50–95 range requested in the schema
+                const prob = Math.min(95, Math.max(50, Number(trait.probabilityPercent) || 75));
+
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between hover:border-brand-300 transition';
+                // FIX: every model-supplied string is escaped
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-2 mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                                    <i class="ph-bold ${iconClass} text-lg"></i>
+                                </div>
+                                <h5 class="font-display font-bold text-sm text-slate-900">${esc(trait.category)}</h5>
+                            </div>
+                            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${badgeClass} shrink-0">
+                                ${esc(trait.inheritancePattern)}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
+                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
+                                <span class="block text-[10px] font-bold uppercase text-indigo-600 mb-0.5">Parent 1</span>
+                                <span class="text-slate-700 font-medium">${esc(trait.parent1Trait)}</span>
+                            </div>
+                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
+                                <span class="block text-[10px] font-bold uppercase text-pink-600 mb-0.5">Parent 2</span>
+                                <span class="text-slate-700 font-medium">${esc(trait.parent2Trait)}</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-brand-50/70 border border-brand-200/80 rounded-xl p-3 mb-3">
+                            <div class="flex items-center justify-between text-xs mb-1">
+                                <span class="font-bold text-brand-900 flex items-center gap-1">
+                                    <i class="ph-fill ph-sparkle text-brand-600"></i> Predicted Trait
+                                </span>
+                                <span class="font-bold text-brand-700">~${prob}% (illustrative)</span>
+                            </div>
+                            <p class="text-xs font-semibold text-slate-900 mb-2">${esc(trait.predictedChildTrait)}</p>
+                            <div class="w-full bg-brand-200/60 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-brand-600 h-full rounded-full" style="width: ${prob}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-500 leading-relaxed">${esc(trait.explanation)}</p>
+                `;
+                traitsGrid.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // MAIN WORKFLOW
+        // ==========================================
+        function setStep(el, state, label) {
+            const states = {
+                pending: ['flex items-center gap-1 text-slate-400', 'ph-bold ph-circle-dashed'],
+                active: ['text-brand-600 font-semibold flex items-center gap-1', 'ph-bold ph-spinner-gap animate-spin'],
+                done: ['text-emerald-600 font-semibold flex items-center gap-1', 'ph-fill ph-check-circle']
+            };
+            el.className = states[state][0];
+            el.innerHTML = `<i class="${states[state][1]}"></i> ${label}`;
+        }
+
+        analyzeBtn.addEventListener('click', async () => {
+            if (!appState.parent1 || !appState.parent2) {
+                showMessage('Two Photos Required', 'Please upload both Parent 1 and Parent 2 photos (or click "Load Sample Portraits") before analyzing.', 'warning');
+                return;
+            }
+            if (!accessCodeInput.value.trim()) {
+                showMessage('Access Code Required', 'Please enter the access code you were given.', 'warning');
+                accessCodeInput.focus();
+                return;
+            }
+            if (!consentCheck.checked) {
+                showMessage('Consent Required', 'Please confirm the consent statement above the Analyze button before continuing.', 'warning');
+                consentCheck.focus();
+                return;
+            }
+
+            hideMessage();
+            analyzeBtn.disabled = true;
+            resultsSection.classList.add('hidden');
+            loadingSection.classList.remove('hidden');
+            loadingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            loadingTitle.textContent = 'Stage 1 of 2: Analyzing Parental Traits...';
+            loadingSubtitle.textContent = 'Gemini Vision is comparing eye color, hair structure, facial proportions, and inheritance patterns.';
+            loadingBar.style.width = '45%';
+            setStep(stepIndicator1, 'active', '1. Trait Analysis');
+            setStep(stepIndicator2, 'pending', '2. Portrait Synthesis');
+
+            let stage = 'analysis';
+            try {
+                const analysis = await analyzeParentTraits();
+                appState.lastAnalysis = analysis;
+                appState.variationCount = 0;
+
+                stage = 'portrait';
+                loadingTitle.textContent = 'Stage 2 of 2: Generating Portrait...';
+                loadingSubtitle.textContent = 'Synthesizing a child portrait from the predicted traits.';
+                loadingBar.style.width = '85%';
+                setStep(stepIndicator1, 'done', '1. Trait Analysis');
+                setStep(stepIndicator2, 'active', '2. Portrait Synthesis');
+
+                const portraitDataUrl = await generateOffspringPortrait(analysis.offspringVisualPrompt, 0);
+
+                loadingBar.style.width = '100%';
+                loadingSection.classList.add('hidden');
+                renderAnalysisResults(analysis, portraitDataUrl);
+                resultsSection.classList.remove('hidden');
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } catch (error) {
+                console.error(`[${stage}]`, error);
+                loadingSection.classList.add('hidden');
+
+                // FIX: stage-specific messages; explicit handling of safety/policy refusals
+                let title, msg;
+                if (error.status === 401) {
+                    title = 'Access Code Incorrect';
+                    msg = 'That access code was not accepted. Please check it and try again.';
+                } else if (error.status === 429) {
+                    title = 'Daily Limit Reached';
+                    msg = 'The free daily limit has been used up. Please try again tomorrow.';
+                } else if (error.policy) {
+                    title = stage === 'analysis' ? 'Photos Could Not Be Analyzed' : 'Portrait Not Generated';
+                    msg = 'The AI service declined this request under its safety policies. Try different photos or a different age setting.';
+                } else if (stage === 'analysis') {
+                    title = 'Trait Analysis Failed';
+                    msg = 'The analysis service could not process your photos. Check your connection and try again.';
+                } else {
+                    title = 'Portrait Generation Failed';
+                    msg = 'The traits were analyzed, but the portrait service failed. Please try again in a moment.';
+                }
+                showMessage(title, msg, 'error');
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        // ==========================================
+        // REGENERATE, DOWNLOAD, COPY
+        // ==========================================
+        regenerateImageBtn.addEventListener('click', async () => {
+            if (!appState.lastAnalysis) return;
+
+            regenerateImageBtn.disabled = true;
+            imageRegenLoader.classList.remove('hidden');
+            appState.variationCount += 1;
+
+            try {
+                offspringImage.src = await generateOffspringPortrait(
+                    appState.lastAnalysis.offspringVisualPrompt,
+                    appState.variationCount
+                );
+            } catch (error) {
+                console.error('[variation]', error);
+                showMessage(
+                    'Portrait Variation Failed',
+                    error.policy
+                        ? 'The image service declined this request under its safety policies.'
+                        : 'Unable to synthesize a new variation right now. Please try again in a moment.',
+                    'error'
+                );
+            } finally {
+                imageRegenLoader.classList.add('hidden');
+                regenerateImageBtn.disabled = false;
+            }
+        });
+
+        downloadPortraitBtn.addEventListener('click', () => {
+            const src = offspringImage.src;
+            if (!src) return;
+            // FIX: derive the extension from the actual MIME type instead of always using .png
+            const mime = (src.match(/^data:(image\/[a-z0-9.+-]+);/i) || [])[1] || 'image/png';
+            const ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[mime.toLowerCase()] || 'png';
+            const link = document.createElement('a');
+            link.href = src;
+            link.download = `KinMorph-Predicted-Child-${Date.now()}.${ext}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // FIX: modern Clipboard API first, execCommand fallback (needed in some iframes / older browsers)
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                let ok = false;
+                try { ok = document.execCommand('copy'); } catch { ok = false; }
+                document.body.removeChild(ta);
+                return ok;
+            }
+        }
+
+        copyPromptBtn.addEventListener('click', async () => {
+            const promptStr = visualPromptText.textContent;
+            if (!promptStr) return;
+            const ok = await copyText(promptStr);
+            copyPromptBtn.innerHTML = ok
+                ? '<i class="ph-bold ph-check text-emerald-400"></i> Copied!'
+                : '<i class="ph-bold ph-x text-rose-400"></i> Copy failed';
+            setTimeout(() => {
+                copyPromptBtn.innerHTML = '<i class="ph-bold ph-copy"></i> Copy Prompt';
+            }, 2000);
+        });
     </script>
 </body>
 </html>
